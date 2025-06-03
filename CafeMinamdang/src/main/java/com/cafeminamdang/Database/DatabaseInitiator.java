@@ -119,35 +119,33 @@ public class DatabaseInitiator {
                     "JudulInvoice VARCHAR(24) NOT NULL," +
                     "Tanggal DATE NOT NULL," +
                     "IDGudang INTEGER NOT NULL," +
-                    "IDBarang INTEGER NOT NULL," +
                     "UnitPrice DECIMAL(10,2) NOT NULL," +
                     "Kuantitas INTEGER NOT NULL," +
-                    "FOREIGN KEY(IDGudang) REFERENCES Gudang(IDGudang)," +
-                    "FOREIGN KEY(IDBarang) REFERENCES Barang(IDBarang)" +
+                    "FOREIGN KEY(IDGudang) REFERENCES Gudang(IDGudang)" +
                     ")"
                 );
                 logger.info("Invoice table created");
 
                 // Format tanggal YY-MM-DD
                 stmt.execute(
-                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, IDBarang, UnitPrice, Kuantitas) " +
-                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1, 1, 60000, 50)" 
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1,60000, 50)" 
                 );
                 stmt.execute(
-                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, IDBarang, UnitPrice, Kuantitas) " +
-                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1, 2, 65000, 50)"
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1,65000, 50)"
                 );
                 stmt.execute(
-                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, IDBarang, UnitPrice, Kuantitas) " +
-                    "VALUES (3, 'Pembelian Kopi Pacamara', '2025-06-02', 1, 3, 70000, 50)"
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (3, 'Pembelian Kopi Pacamara', '2025-06-02', 1, 70000, 50)"
                 );
                 stmt.execute(
-                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, IDBarang, UnitPrice, Kuantitas) " +
-                    "VALUES (4, 'Pembelian Kopi Liberica', '2025-06-02', 1, 4, 50000, 50)"
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (4, 'Pembelian Kopi Liberica', '2025-06-02', 1, 50000, 50)"
                 );
                 stmt.execute(
-                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, IDBarang, UnitPrice, Kuantitas) " +
-                    "VALUES (5, 'Pembelian Kopi Excelsa', '2025-06-02', 1, 5, 40000, 50)"
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (5, 'Pembelian Kopi Excelsa', '2025-06-02', 1, 40000, 50)"
                 );
                 logger.info("Sample Invoice data added");
                 
