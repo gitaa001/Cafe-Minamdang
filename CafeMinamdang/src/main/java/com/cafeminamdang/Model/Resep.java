@@ -109,6 +109,8 @@ public class Resep {
             
         } catch (SQLException e) {
             logger.severe("Error fetching recipes: " + e.getMessage());
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
         }
         return list;  // Kembalikan ObservableList yang berisi semua resep
     }
