@@ -1,4 +1,4 @@
-package com.cafeminamdang.Database;
+package com.cafeminamdang.database;
 
 import java.sql.SQLException;
 
@@ -129,11 +129,11 @@ public class DatabaseInitiator {
                 // Format tanggal YY-MM-DD
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1,60000, 50)" 
+                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1, 60000, 50)" 
                 );
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1,65000, 50)"
+                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1, 65000, 50)"
                 );
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +

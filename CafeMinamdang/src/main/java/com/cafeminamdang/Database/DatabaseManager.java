@@ -1,4 +1,4 @@
-package com.cafeminamdang.Database;
+package com.cafeminamdang.database;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -31,7 +31,7 @@ public class DatabaseManager {
                 System.out.println("File exists: " + dbFile.exists());
                 System.out.println("File size: " + dbFile.length() + " bytes");
                 String url = "jdbc:sqlite:" + dbFile.getPath();
-                Connection connection = DriverManager.getConnection(url);
+                connection = DriverManager.getConnection(url);
                 // logger.info("Connection to SQLite has been established");
     
                 // String url = "jdbc:sqlite:CafeMinamdang.db";
