@@ -186,7 +186,7 @@ public class DatabaseInitiator {
         }
     }
     
-    public static void main(String[] args){
+    public static void tes(){
         var dburl = DatabaseInitiator.class.getClassLoader().getResource("CafeMinamdang.db");
         
         if (dburl != null) {
@@ -223,7 +223,6 @@ public class DatabaseInitiator {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
 

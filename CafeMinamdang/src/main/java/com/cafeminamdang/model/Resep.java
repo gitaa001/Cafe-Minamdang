@@ -84,20 +84,21 @@ public class Resep {
      */
     public static List<Resep> getAllResep(){
         List<Resep> resepList = new ArrayList<>();
-        String sql = "SELECT * FROM Resep ORDER BY IDResep DESC";
+        String sql = "SELECT * FROM Resep ORDER BY IDResep";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-            Statement stmt = conn.createStatement();
+        try (Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
-            
-                while (rs.next()) {
-                    Resep resep = new Resep();
-                    resep.setIdResep(rs.getInt("IDResep"));
-                    resep.setNamaResep(rs.getString("NamaResep"));
-                    resep.setDeskripsi(rs.getString("Deskripsi"));
-                    resep.setPreskripsi(rs.getString("Preskripsi"));
-                    
-                    resepList.add(resep);
+            // int i = 1;
+
+            while (rs.next()) {
+                Resep resep = new Resep();
+                resep.setIdResep(rs.getInt("IDResep"));
+                resep.setNamaResep(rs.getString("NamaResep"));
+                resep.setDeskripsi(rs.getString("Deskripsi"));
+                resep.setPreskripsi(rs.getString("Preskripsi"));
+                resepList.add(resep);
+                // System.out.println((i++) + resep.toString());
             }
         } catch (SQLException e) {
             logger.info("Error retrieving recipes : " + e.getMessage());
@@ -113,9 +114,9 @@ public class Resep {
      */
     public static Resep getResepByID(int id) {
         String sql = "SELECT * FROM Resep WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id); // mengubah parameter ? menjadi id masukan parameter
             ResultSet rs = pstmt.executeQuery();
@@ -150,9 +151,9 @@ public class Resep {
 
     private boolean insert() {
         String sql = "INSERT INTO Resep (NamaResep, Deskripsi, Preskripsi) VALUES (?, ?, ?)";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, namaResep);
             pstmt.setString(2, deskripsi);
@@ -161,12 +162,11 @@ public class Resep {
             int affectedRows = pstmt.executeUpdate(); // Mendapatkan row yang terkena dampak seharusnya 1
 
             if (affectedRows > 0){
-                try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        idResep = generatedKeys.getInt(1);
-                        logger.info("Recipe created with ID: " + idResep);
+                try (Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                        idResep = rs.getInt(1);
+                        logger.info("Recipe deleted: " + idResep);
                         return true;
-                    }
                 }
             }
         } catch (SQLException e) {
@@ -182,9 +182,9 @@ public class Resep {
      */
     private boolean update() {
         String sql = "UPDATE Resep SET NamaResep = ?, Deskripsi = ?, Preskripsi = ? WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-            PreparedStatement ptsmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement ptsmt = conn.prepareStatement(sql)) {
             
             ptsmt.setString(1, namaResep);
             ptsmt.setString(2, deskripsi);
@@ -210,9 +210,9 @@ public class Resep {
      */
     public boolean delete() {
         String sql = "DELETE FROM Resep WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, idResep);
 
@@ -236,9 +236,9 @@ public class Resep {
      */
     public static boolean deleteById(int id) {
         String sql = "DELETE FROM Resep WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, id);
 
@@ -255,12 +255,13 @@ public class Resep {
         return false;
     }
 
-    public static void main (String[] args) {
-        List<Resep> listReseps = new ArrayList<>();
-        listReseps = Resep.getAllResep();
+    // Driver
+    // public static void main (String[] args) {
+    //     List<Resep> listReseps = new ArrayList<>();
+    //     listReseps = Resep.getAllResep();
 
-        for (Resep resep : listReseps){
-            System.out.println(resep.toString());
-        }
-    }
+    //     for (Resep resep : listReseps){
+    //         System.out.println(resep.toString());
+    //     }
+    // }
 }
