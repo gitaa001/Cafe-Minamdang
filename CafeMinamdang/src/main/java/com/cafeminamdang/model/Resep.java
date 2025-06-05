@@ -165,7 +165,7 @@ public class Resep {
                 try (Statement stmt = conn.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
                         idResep = rs.getInt(1);
-                        logger.info("Recipe deleted: " + idResep);
+                        logger.info("Recipe inserted: " + idResep);
                         return true;
                 }
             }
