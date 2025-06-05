@@ -1,10 +1,8 @@
 package com.cafeminamdang.view;
 
-import javafx.animation.FadeTransition;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +15,7 @@ public class ViewManager {
     private ViewManager(){
     }
 
-    public static synchronized ViewManager getInstance(){
+    public static ViewManager getInstance(){
         if (instance == null){
             instance = new ViewManager();
         }
@@ -44,18 +42,7 @@ public class ViewManager {
         Pane root = viewCache.get(name);
         Scene scene = new Scene(root);
 
-        FadeTransition fadeOut = new FadeTransition(Duration.millis(300), primaryStage.getScene().getRoot());
-        fadeOut.setFromValue(1.0);
-        fadeOut.setToValue(0.0);
-        fadeOut.setOnFinished(e -> {
-            // fade out, fade in
-            primaryStage.setScene(scene);
-            FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
-        });
-        fadeOut.play();
+        primaryStage.setScene(scene);
     }
 
     public void initializeView(String name) {
