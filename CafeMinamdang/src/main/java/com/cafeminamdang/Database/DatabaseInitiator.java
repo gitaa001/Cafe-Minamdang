@@ -129,11 +129,11 @@ public class DatabaseInitiator {
                 // Format tanggal YY-MM-DD
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1,60000, 50)" 
+                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1, 60000, 50)" 
                 );
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1,65000, 50)"
+                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1, 65000, 50)"
                 );
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
@@ -186,7 +186,7 @@ public class DatabaseInitiator {
         }
     }
     
-    public static void main(String[] args){
+    public static void tes(){
         var dburl = DatabaseInitiator.class.getClassLoader().getResource("CafeMinamdang.db");
         
         if (dburl != null) {
@@ -223,7 +223,5 @@ public class DatabaseInitiator {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
-
