@@ -19,3 +19,5 @@ Thumbs.db
 
 # Database (kalau mau file lokalnya diabaikan)
 *.db
+
+*.class
