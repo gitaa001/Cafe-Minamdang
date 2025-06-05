@@ -11,8 +11,6 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.logging.*;
 
-import com.cafeminamdang.Database.*;
-
 public class DatabaseInitiator {
     public static final Logger logger = Logger.getLogger(DatabaseInitiator.class.getName()); 
 
@@ -121,13 +119,35 @@ public class DatabaseInitiator {
                     "JudulInvoice VARCHAR(24) NOT NULL," +
                     "Tanggal DATE NOT NULL," +
                     "IDGudang INTEGER NOT NULL," +
-                    "IDBarang INTEGER NOT NULL," +
                     "UnitPrice DECIMAL(10,2) NOT NULL," +
-                    "FOREIGN KEY(IDGudang) REFERENCES Gudang(IDGudang)," +
-                    "FOREIGN KEY(IDBarang) REFERENCES Barang(IDBarang)" +
+                    "Kuantitas INTEGER NOT NULL," +
+                    "FOREIGN KEY(IDGudang) REFERENCES Gudang(IDGudang)" +
                     ")"
                 );
                 logger.info("Invoice table created");
+
+                // Format tanggal YY-MM-DD
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1, 60000, 50)" 
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1, 65000, 50)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (3, 'Pembelian Kopi Pacamara', '2025-06-02', 1, 70000, 50)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (4, 'Pembelian Kopi Liberica', '2025-06-02', 1, 50000, 50)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES (5, 'Pembelian Kopi Excelsa', '2025-06-02', 1, 40000, 50)"
+                );
+                logger.info("Sample Invoice data added");
                 
                 stmt.execute(
                     "CREATE TABLE IF NOT EXISTS Resep (" +
@@ -138,13 +158,35 @@ public class DatabaseInitiator {
                     ")"
                 );
                 logger.info("Resep table created");
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Resep (IDResep, NamaResep, Deskripsi, Preskripsi) " +
+                    "VALUES (1, 'Espresso', 'Kopi hitam murni', 'Giling kopi halus, ekstraksi 25-30 detik dengan tekanan 9 bar')"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Resep (IDResep, NamaResep, Deskripsi, Preskripsi) " +
+                    "VALUES (2, 'Cappuccino', 'Kopi dengan susu dan foam', 'Espresso 30ml, tambahkan 60ml susu panas dan 60ml foam susu')"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Resep (IDResep, NamaResep, Deskripsi, Preskripsi) " +
+                    "VALUES (3, 'Cafe Latte', 'Kopi dengan susu creamy', 'Espresso 30ml, tambahkan 120ml susu panas dengan sedikit foam')"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Resep (IDResep, NamaResep, Deskripsi, Preskripsi) " +
+                    "VALUES (4, 'Americano', 'Kopi espresso dengan air panas', 'Espresso 30ml, tambahkan 90ml air panas')"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Resep (IDResep, NamaResep, Deskripsi, Preskripsi) " +
+                    "VALUES (5, 'Cold Brew', 'Seduhan kopi dingin', 'Rendam 100g kopi dalam 1L air selama 12 jam, saring dan sajikan dengan es')"
+                );
+                logger.info("Sample Resep data added");
+                
                 
                 logger.info("All tables created successfully");
             }
         }
     }
     
-    public static void main(String[] args){
+    public static void tes(){
         var dburl = DatabaseInitiator.class.getClassLoader().getResource("CafeMinamdang.db");
         
         if (dburl != null) {
@@ -181,7 +223,5 @@ public class DatabaseInitiator {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
-
