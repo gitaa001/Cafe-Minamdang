@@ -16,7 +16,10 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.Group;
+import javafx.scene.Node;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +59,11 @@ public class ResepView implements BaseView {
         loadData();
     }
 
+    /**
+     * Refreshing the content of table view by
+     * wrapping the recipes with an observable list
+     * to satisfy tableview parameter.
+     */
     private void loadData(){
         List<Resep> reseps = Resep.getAllResep();
         dataResep = FXCollections.observableArrayList(reseps); // Wraping list ke observable list
@@ -70,9 +78,7 @@ public class ResepView implements BaseView {
         header.setPadding(new Insets(15, 15, 15, 15));
         header.setStyle("-fx-background-color: #E43A3A;");
 
-        Label title = new Label("Cafe Minamdang - Resep Management");
-        title.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
-        title.setTextFill(Color.WHITE);
+        Node icon = createSvgIcon("M25.2387 4.16776L32.0431 6.71998L24.9957 9.4011L17.9483 6.71998L24.7527 4.16776C24.9089 4.10761 25.0825 4.10761 25.2474 4.16776H25.2387ZM11.8035 7.94024V17.582C11.6907 17.6163 11.5779 17.6507 11.465 17.6937L3.13314 20.8216C1.24978 21.5263 0 23.3223 0 25.316V35.5592C0 37.4669 1.13696 39.1942 2.90748 39.9676L11.2394 43.594C12.4892 44.1353 13.9038 44.1353 15.1536 43.594L24.9957 39.3059L34.8464 43.594C36.0962 44.1353 37.5109 44.1353 38.7606 43.594L47.0925 39.9676C48.8544 39.2028 50 37.4669 50 35.5592V25.3245C50 23.3223 48.7502 21.5349 46.8669 20.8216L38.535 17.6937C38.4222 17.6507 38.3093 17.6163 38.1965 17.582V7.94024C38.1965 5.93799 36.9467 4.15058 35.0634 3.43733L26.7315 0.30936C25.6206 -0.10312 24.3968 -0.10312 23.2859 0.30936L14.954 3.43733C13.0533 4.15058 11.8035 5.94658 11.8035 7.94024ZM34.0219 18.089L26.8703 20.7701V13.1048L34.0219 10.3893V18.089ZM13.4352 21.5521L20.2395 24.1043L13.1922 26.7768L6.14477 24.1043L12.9491 21.5521C13.1054 21.4919 13.2789 21.4919 13.4438 21.5521H13.4352ZM15.0668 39.1168V30.4805L22.2184 27.765V36.0061L15.0668 39.1168ZM36.5562 21.5521C36.7124 21.4919 36.886 21.4919 37.0509 21.5521L43.8552 24.1043L36.7992 26.7768L29.7518 24.1043L36.5562 21.5521ZM45.4088 36.1865L38.6738 39.1168V30.4805L45.8254 27.765V35.5592C45.8254 35.8342 45.6605 36.0748 45.4088 36.1865Z");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -82,7 +88,7 @@ public class ResepView implements BaseView {
             ViewManager.getInstance().switchView(null);
         });
 
-        header.getChildren().addAll(title, spacer, backButton);
+        header.getChildren().addAll(icon, spacer, backButton);
         return header;
     }
 
@@ -101,10 +107,10 @@ public class ResepView implements BaseView {
 
         Button addButton = new Button("Add Recipe");
         addButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
-        addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"); 
-        addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"));
+        addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"); 
+        addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"));
         addButton.setOnAction(e -> showFormView(null));
-        addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"));
+        addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"));
         controlBar.getChildren().addAll(titleLabel, spacer, addButton);
 
         tableView = new TableView<>();
@@ -335,6 +341,17 @@ public class ResepView implements BaseView {
         }
 
         mainPane.setCenter(formView);
+    }
+
+    private Node createSvgIcon(String svgPath) {
+        SVGPath path = new SVGPath();
+        path.setContent(svgPath);
+        path.setFill(Color.WHITE);
+
+        path.setScaleX(0.5);
+        path.setScaleY(0.5);
+        
+        return path;
     }
 
     private void showAlert(String title, String message){
