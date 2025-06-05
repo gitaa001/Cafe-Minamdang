@@ -8,8 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -24,6 +27,7 @@ public class ResepView implements BaseView {
     private VBox formView;
     private ObservableList<Resep> dataResep;
     private TableView<Resep> tableView;
+    private Font helvetica = Font.font("file:resources/Poppins-SemiBold.ttf", 12);
 
     public ResepView(){
         mainPane = new BorderPane();
@@ -54,9 +58,9 @@ public class ResepView implements BaseView {
 
     private void loadData(){
         List<Resep> reseps = Resep.getAllResep();
-        dataResep = FXCollections.observableArrayList(reseps);
+        dataResep = FXCollections.observableArrayList(reseps); // Wraping list ke observable list
         if (tableView != null){
-            tableView.setItems(dataResep);
+            tableView.setItems(dataResep); // Table view mempunyai parameter observable list
         }
     }
 
@@ -67,7 +71,7 @@ public class ResepView implements BaseView {
         header.setStyle("-fx-background-color: #E43A3A;");
 
         Label title = new Label("Cafe Minamdang - Resep Management");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        title.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD, 20));
         title.setTextFill(Color.WHITE);
 
         Region spacer = new Region();
@@ -95,14 +99,18 @@ public class ResepView implements BaseView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button addButton = new Button("New Recipe");
-        addButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;"); 
+        Button addButton = new Button("Add Recipe");
+        addButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
+        addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"); 
+        addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"));
         addButton.setOnAction(e -> showFormView(null));
+        addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"));
         controlBar.getChildren().addAll(titleLabel, spacer, addButton);
 
         tableView = new TableView<>();
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
+        // Penerapan callback function dengan melakukan binding suatu objek dengan getter pada modal
         TableColumn<Resep, Integer> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(cellData -> javafx.beans.binding.Bindings.createObjectBinding(
                 () -> cellData.getValue().getIdResep()));
@@ -198,6 +206,7 @@ public class ResepView implements BaseView {
         instructionsArea.setPrefRowCount(6);
         instructionsArea.setWrapText(true);
 
+        // Menaruh UI berdasarkan grid dengan parameter (kolom,row)
         form.add(nameLabel, 0, 0);
         form.add(nameField, 1, 0);
         form.add(descLabel, 0, 1);
@@ -251,7 +260,8 @@ public class ResepView implements BaseView {
         footer.setPadding(new Insets(10));
         footer.setStyle("-fx-background-color: #E43A3A;");
 
-        Label copyright = new Label("© 2025 Cafe Minamdang. All rights reserved.");
+        Label copyright = new Label("\u00a9" + " 2025 Cafe Minamdang. All rights reserved.");
+        copyright.setFont(Font.font("Arial", FontWeight.BOLD, 9));
         copyright.setTextFill(Color.WHITE);
 
         footer.getChildren().add(copyright);
