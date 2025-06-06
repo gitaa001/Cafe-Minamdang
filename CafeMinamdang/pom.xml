@@ -71,7 +71,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.cafeminamdang.Driver.BarangDriver</mainClass>
+                    <mainClass>com.cafeminamdang.CafeMinamdangApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

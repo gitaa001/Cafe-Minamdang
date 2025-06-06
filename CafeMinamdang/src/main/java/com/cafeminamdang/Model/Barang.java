@@ -49,15 +49,15 @@ public class Barang {
 
     // --- GETTER biasa
     public String getIDBarang() { return idBarang.get(); }
-    public String getNama() { return nama.get(); }
+    public String getNamaBarang() { return nama.get(); }
     public String getDeskripsi() { return deskripsi.get(); }
     public String getIDGudang() { return idGudang.get(); }
     public Integer getKuantitas() { return kuantitas; }
-    public boolean getIsKonsinyasi() { return isKonsinyasi; }
+    public Boolean getIsKonsinyasi() { return isKonsinyasi; }
 
     // --- SETTER
     public void setIdBarang(String idBarang) { this.idBarang.set(idBarang); }
-    public void setNama(String nama) { this.nama.set(nama); }
+    public void setNamaBarang(String nama) { this.nama.set(nama); }
     public void setDeskripsi(String deskripsi) { this.deskripsi.set(deskripsi); }
     public void setKuantitas(Integer kuantitas) { this.kuantitas = kuantitas; }
     public void setKonsinyasi(boolean konsinyasi) { this.isKonsinyasi = konsinyasi; }
@@ -76,7 +76,7 @@ public class Barang {
             while (rs.next()) {
                 Barang barang = new Barang();
                 barang.setIdBarang(rs.getString("IDBarang"));
-                barang.setNama(rs.getString("NamaBarang"));
+                barang.setNamaBarang(rs.getString("NamaBarang"));
                 barang.setDeskripsi(rs.getString("Deskripsi"));
                 barang.setKuantitas(rs.getInt("Kuantitas"));
                 barang.setKonsinyasi(rs.getBoolean("IsKonsinyasi"));
@@ -102,7 +102,7 @@ public class Barang {
             if (rs.next()) {
                 Barang barang = new Barang();
                 barang.setIdBarang(rs.getString("IDBarang"));
-                barang.setNama(rs.getString("NamaBarang"));
+                barang.setNamaBarang(rs.getString("NamaBarang"));
                 barang.setDeskripsi(rs.getString("Deskripsi"));
                 barang.setKuantitas(rs.getInt("Kuantitas"));
                 barang.setKonsinyasi(rs.getBoolean("IsKonsinyasi"));
@@ -131,7 +131,7 @@ public class Barang {
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, getIDBarang());
-            pstmt.setString(2, getNama());
+            pstmt.setString(2, getNamaBarang());
             pstmt.setString(3, getDeskripsi());
             pstmt.setInt(4, getKuantitas());
             pstmt.setBoolean(5, getIsKonsinyasi());
@@ -150,7 +150,7 @@ public class Barang {
         Connection conn = DatabaseManager.getInstance().getConnection();
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, getNama());
+            pstmt.setString(1, getNamaBarang());
             pstmt.setString(2, getDeskripsi());
             pstmt.setInt(3, getKuantitas());
             pstmt.setBoolean(4, getIsKonsinyasi());

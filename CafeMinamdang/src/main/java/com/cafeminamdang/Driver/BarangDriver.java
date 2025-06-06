@@ -108,7 +108,7 @@ public class BarangDriver {
 
     private static void printBarang(Barang b) {
         System.out.println("ID       : " + b.getIDBarang());
-        System.out.println("Nama     : " + b.getNama());
+        System.out.println("Nama     : " + b.getNamaBarang());
         System.out.println("Deskripsi: " + b.getDeskripsi());
         System.out.println("Kuantitas: " + b.getKuantitas());
         System.out.println("Konsinyasi: " + b.getIsKonsinyasi());
