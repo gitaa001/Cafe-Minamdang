@@ -1,4 +1,4 @@
-package com.cafeminamdang.database;
+package com.cafeminamdang.Database;
 
 import java.sql.SQLException;
 
