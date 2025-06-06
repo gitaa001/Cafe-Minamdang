@@ -86,7 +86,7 @@ public class ResepView implements BaseView {
 
         Button backButton = new Button("Menu");
         backButton.setOnAction(e -> {
-            ViewManager.getInstance().switchView(null);
+            ViewManager.getInstance().switchView("owner menu");
         });
 
         header.getChildren().addAll(icon,titleLabel, spacer, backButton);

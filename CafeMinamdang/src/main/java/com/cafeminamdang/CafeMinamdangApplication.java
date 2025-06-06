@@ -1,9 +1,9 @@
 package com.cafeminamdang;
 
+import com.cafeminamdang.view.OwnerMenuView;
 import com.cafeminamdang.view.ResepView;
 import com.cafeminamdang.view.ViewManager;
 import javafx.application.Application;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class CafeMinamdangApplication extends Application {
@@ -19,6 +19,9 @@ public class CafeMinamdangApplication extends Application {
         
         ResepView resepView = new ResepView();
         viewManager.registerView("resep", resepView.getRoot());
+
+        OwnerMenuView ownerMenuView = new OwnerMenuView();
+        viewManager.registerView("owner menu", ownerMenuView.getRoot());
         
         viewManager.initializeView("resep");
         
