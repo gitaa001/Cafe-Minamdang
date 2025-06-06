@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Locale.Category;
 
 import javafx.geometry.Insets;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.AreaChart;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -36,14 +39,8 @@ public class OwnerDashboard implements BaseView {
         HBox header = createHeader();
         mainPane.setTop(header);
 
-        // centerView = createCenterView();
-        // Label placeholder = new Label("This is a placeholder");
-        // centerView.getChildren().addAll(placeholder);
-        VBox centerView = new VBox(20);
-        centerView.setAlignment(Pos.CENTER);
-        centerView.setPadding(new Insets(20));
-        centerView.getChildren().add(createSalesChart()); // Add the chart here
-        mainPane.setCenter(centerView);
+        Node dashboardView = createDashboardView();
+        mainPane.setCenter(dashboardView);
 
         HBox footer = createFooter();
         mainPane.setBottom(footer);
@@ -56,7 +53,7 @@ public class OwnerDashboard implements BaseView {
 
     @Override
     public void refresh(){
-        createSalesChart();
+        createDashboardView();
     }
 
     private VBox createCenterView(){
@@ -167,6 +164,95 @@ public class OwnerDashboard implements BaseView {
         }
     }
 
+    private Node createDashboardView(){
+        GridPane dashboard = new GridPane();
+        dashboard.setPadding(new Insets(20));
+        dashboard.setHgap(10);
+        dashboard.setVgap(10);
+
+        LineChart<String, Number> salesChart1 = createSalesChart();
+        AreaChart<String, Number> salesChart2 = createAreaChart();
+        BarChart<String, Number> salesChart3 = createBarChart();
+        PieChart salesChart4 = createPieChart();
+
+        dashboard.add(salesChart1, 0, 0);
+        dashboard.add(salesChart2, 1, 0);
+        dashboard.add(salesChart3, 0, 1);
+        dashboard.add(salesChart4, 1, 1);
+
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(50);
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setPercentWidth(50);
+        dashboard.getColumnConstraints().addAll(column1, column2);
+
+        RowConstraints row1 = new RowConstraints();
+        row1.setPercentHeight(50);
+        RowConstraints row2 = new RowConstraints();
+        row2.setPercentHeight(50);
+        dashboard.getRowConstraints().addAll(row1, row2);
+        
+        return dashboard;
+    }
+
+    private BarChart<String, Number> createBarChart(){
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Date");
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Total Sales (Rp)");
+
+        BarChart<String, Number> salesChart = new BarChart<>(xAxis, yAxis);
+        salesChart.setTitle("SalesData");
+
+        // Instansiasi titik (series)
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Total Sales");
+
+        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+
+        // plotting titik-titik dari data yang ada
+        for (Penjualan penjualan : penjualans){
+            String date = penjualan.getTanggalPenjualan().toString();
+            int totalSales = penjualan.getTotalPenjualan();
+            series.getData().add(new XYChart.Data<>(date, totalSales));
+        }
+
+        // Memasukkan data ke lineChart
+        salesChart.getData().add(series);
+
+        return salesChart;
+    }
+
+    private AreaChart<String, Number> createAreaChart(){
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Date");
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Total Sales (Rp)");
+
+        AreaChart<String, Number> salesChart = new AreaChart<>(xAxis, yAxis);
+        salesChart.setTitle("SalesData");
+
+        // Instansiasi titik (series)
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Total Sales");
+
+        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+
+        // plotting titik-titik dari data yang ada
+        for (Penjualan penjualan : penjualans){
+            String date = penjualan.getTanggalPenjualan().toString();
+            int totalSales = penjualan.getTotalPenjualan();
+            series.getData().add(new XYChart.Data<>(date, totalSales));
+        }
+
+        // Memasukkan data ke lineChart
+        salesChart.getData().add(series);
+
+        return salesChart;
+    }
+
     private LineChart<String, Number> createSalesChart(){
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Date");
@@ -192,6 +278,26 @@ public class OwnerDashboard implements BaseView {
 
         // Memasukkan data ke lineChart
         salesChart.getData().add(series);
+
+        return salesChart;
+    }
+
+    private PieChart createPieChart(){
+        PieChart salesChart = new PieChart();
+        salesChart.setTitle("SalesData");
+
+        // Instansiasi titik (series)
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Total Sales");
+
+        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+
+        // plotting titik-titik dari data yang ada
+        for (Penjualan penjualan : penjualans){
+            String date = penjualan.getTanggalPenjualan().toString();
+            int totalSales = penjualan.getTotalPenjualan();
+            salesChart.getData().add(new PieChart.Data(date, totalSales));
+        }
 
         return salesChart;
     }
