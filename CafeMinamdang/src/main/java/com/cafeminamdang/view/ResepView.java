@@ -113,7 +113,7 @@ public class ResepView implements BaseView {
         addButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
         addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"); 
         addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"));
-        addButton.setOnAction(e -> showFormView(null));
+        addButton.setOnAction(e -> showFormView(null)); // Resep baru makanya passing null
         addButton.setOnMouseExited(e -> addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"));
         controlBar.getChildren().addAll(titleLabel, spacer, addButton);
 
@@ -149,6 +149,7 @@ public class ResepView implements BaseView {
                 editBtn.setStyle("-fx-background-color: #FFC107; -fx-text-fill: white;");
                 deleteBtn.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
                 
+                // getTableView().getItems.get(getIndex()); mendapatkan item pada index row tersebut
                 viewBtn.setOnAction(event -> {
                     Resep resep = getTableView().getItems().get(getIndex());
                     showDetailView(resep);
@@ -186,7 +187,7 @@ public class ResepView implements BaseView {
     private VBox createDetailView(){
         VBox container = new VBox(20);
         container.setPadding(new Insets(20));
-        // Holder (wrapper) buat konten resep yang asli 
+        // Holder (wrapper) buat konten resep yang asli *bakal di populate sama konten masing-masing di showDetailView
         return container;
     }
 
@@ -239,6 +240,7 @@ public class ResepView implements BaseView {
                 return;
             }
 
+            // Mengambil data dari passing parameter pada showFormView(Resep resep)
             Resep resep = (Resep) form.getUserData();
             if (resep == null){
                 resep = new Resep();
@@ -254,7 +256,7 @@ public class ResepView implements BaseView {
                 showListView();
                 loadData();
             } else {
-                showAlert("Error", "Failed too save recipe!");
+                showAlert("Error", "Failed to save recipe!");
             }
         });
 
@@ -271,7 +273,7 @@ public class ResepView implements BaseView {
         footer.setStyle("-fx-background-color: #E43A3A;");
 
         Label copyright = new Label("\u00a9" + " 2025 Cafe Minamdang. All rights reserved.");
-        copyright.setFont(Font.font("Arial", FontWeight.BOLD, 9));
+        copyright.setFont(loadFont("Thin-Semibold"));
         copyright.setTextFill(Color.WHITE);
 
         footer.getChildren().add(copyright);
@@ -323,11 +325,20 @@ public class ResepView implements BaseView {
     }
 
     private void showFormView(Resep resep){
+        // Ambil children dari formView
+        // container.getChildren().addAll(formTitle, form, buttonBar); *Acuan di createFormView
         GridPane form = (GridPane) formView.getChildren().get(1);
-        Label formTitle = (Label) formView.getChildren().get(0);
+        Label formTitle = (Label) formView.getChildren().get(0); 
 
+        // Kalo edit bakal ada resep di masukin ke node form
         form.setUserData(resep);
 
+        // form.add(nameLabel, 0, 0);
+        // form.add(nameField, 1, 0);
+        // form.add(descLabel, 0, 1);
+        // form.add(descArea, 1, 1);
+        // form.add(instructionsLabel, 0, 2);
+        // form.add(instructionsArea, 1, 2); *Acuan di createFormView
         TextField nameField = (TextField) form.getChildren().get(1);
         TextArea descArea = (TextArea) form.getChildren().get(3);
         TextArea instructionsArea = (TextArea) form.getChildren().get(5);
@@ -376,13 +387,21 @@ public class ResepView implements BaseView {
                     e.printStackTrace();
                     return new Font("System", 24);
                 }
-            default:
+            case "Thin-SemiBold":
                 try {
-                    Font poppins = Font.loadFont(getClass().getResource(basePath + "Poppins-Reguler.ttf").toExternalForm(), 12);
+                    Font poppins = Font.loadFont(getClass().getResource(basePath + "Poppins-SemiBold.ttf").toExternalForm(), 10);
                     return poppins != null ? poppins : Font.getDefault();
                 } catch (Exception e){
                     e.printStackTrace();
-                    return new Font("System", 12);
+                    return new Font("System", 10);
+                }
+            default:
+                try {
+                    Font poppins = Font.loadFont(getClass().getResource(basePath + "Poppins-Regular.ttf").toExternalForm(), 10);
+                    return poppins != null ? poppins : Font.getDefault();
+                } catch (Exception e){
+                    e.printStackTrace();
+                    return new Font("System", 10);
                 }
         }
     }

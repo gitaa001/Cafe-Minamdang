@@ -138,7 +138,10 @@ public class Resep {
     }
 
     /**
-     * Save recipe to database (insert or update)
+     * Save recipe to database (insert or update) 
+     * based on the idResep if idResep is > 0 then
+     * update but if its < 0 then its a new object
+     * therefore insert the data to the database
      * @return true if successful, false otherwise
      */
     public boolean save(){
@@ -149,6 +152,10 @@ public class Resep {
         }
     }
 
+    /**
+     * Insert new instance of a recipe to database
+     * @return true if data is inserted, false otherwise
+     */
     private boolean insert() {
         String sql = "INSERT INTO Resep (NamaResep, Deskripsi, Preskripsi) VALUES (?, ?, ?)";
         Connection conn = DatabaseManager.getInstance().getConnection();
