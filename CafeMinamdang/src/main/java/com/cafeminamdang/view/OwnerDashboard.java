@@ -1,5 +1,13 @@
 package com.cafeminamdang.view;
 
+import com.cafeminamdang.model.Penjualan;
+import com.cafeminamdang.controller.PenjualanController;
+
+import java.util.List;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Locale.Category;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -9,21 +17,32 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.Node;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 
-public class OwnerMenuView implements BaseView {
+public class OwnerDashboard implements BaseView {
+    private PenjualanController penjualanController;
     private BorderPane mainPane;
     private VBox centerView;
 
-    public OwnerMenuView(){
+    public OwnerDashboard(){
+        penjualanController = new PenjualanController();
+
         mainPane = new BorderPane();
         mainPane.setPrefSize(800, 600);
 
         HBox header = createHeader();
         mainPane.setTop(header);
 
-        centerView = createCenterView();
-        Label placeholder = new Label("This is a placeholder");
-        centerView.getChildren().addAll(placeholder);
+        // centerView = createCenterView();
+        // Label placeholder = new Label("This is a placeholder");
+        // centerView.getChildren().addAll(placeholder);
+        VBox centerView = new VBox(20);
+        centerView.setAlignment(Pos.CENTER);
+        centerView.setPadding(new Insets(20));
+        centerView.getChildren().add(createSalesChart()); // Add the chart here
         mainPane.setCenter(centerView);
 
         HBox footer = createFooter();
@@ -37,7 +56,7 @@ public class OwnerMenuView implements BaseView {
 
     @Override
     public void refresh(){
-
+        createSalesChart();
     }
 
     private VBox createCenterView(){
@@ -146,5 +165,34 @@ public class OwnerMenuView implements BaseView {
                     return new Font("System", 10);
                 }
         }
+    }
+
+    private LineChart<String, Number> createSalesChart(){
+        CategoryAxis xAxis = new CategoryAxis();
+        xAxis.setLabel("Date");
+
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setLabel("Total Sales (Rp)");
+
+        LineChart<String, Number> salesChart = new LineChart<>(xAxis, yAxis);
+        salesChart.setTitle("SalesData");
+
+        // Instansiasi titik (series)
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Total Sales");
+
+        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+
+        // plotting titik-titik dari data yang ada
+        for (Penjualan penjualan : penjualans){
+            String date = penjualan.getTanggalPenjualan().toString();
+            int totalSales = penjualan.getTotalPenjualan();
+            series.getData().add(new XYChart.Data<>(date, totalSales));
+        }
+
+        // Memasukkan data ke lineChart
+        salesChart.getData().add(series);
+
+        return salesChart;
     }
 }

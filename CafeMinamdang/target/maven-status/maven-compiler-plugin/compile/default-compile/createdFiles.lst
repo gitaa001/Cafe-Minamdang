@@ -1,10 +1,12 @@
 com\cafeminamdang\database\DatabaseManager.class
-com\cafeminamdang\view\OwnerMenuView.class
 com\cafeminamdang\database\DatabaseInitiator.class
 com\cafeminamdang\controller\ResepController.class
 com\cafeminamdang\view\BaseView.class
 com\cafeminamdang\view\Role.class
+com\cafeminamdang\view\OwnerDashboard.class
+com\cafeminamdang\controller\PenjualanController.class
 com\cafeminamdang\CafeMinamdangApplication.class
+com\cafeminamdang\model\Penjualan.class
 com\cafeminamdang\model\Resep.class
 com\cafeminamdang\view\ResepView$1.class
 com\cafeminamdang\view\ResepView.class

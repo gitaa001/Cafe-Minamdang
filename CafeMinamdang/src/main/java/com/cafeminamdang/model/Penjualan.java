@@ -16,7 +16,7 @@ public class Penjualan {
 
     private int idPenjualan;
     private int totalPenjualan;
-    private Date tanggalPenjualan;
+    private String tanggalPenjualan;
     private int idGudang;
 
     // Constructor
@@ -24,7 +24,7 @@ public class Penjualan {
 
     }
 
-    public Penjualan(int idPenjualan, int totalPenjualan, Date tanggalPenjualan, int idGudang){
+    public Penjualan(int idPenjualan, int totalPenjualan, String tanggalPenjualan, int idGudang){
         this.idPenjualan = idPenjualan;
         this.totalPenjualan = totalPenjualan;
         this.tanggalPenjualan = tanggalPenjualan;
@@ -40,7 +40,7 @@ public class Penjualan {
         return idPenjualan;
     }
 
-    public Date getTanggalPenjualan() {
+    public String getTanggalPenjualan() {
         return tanggalPenjualan;
     }
 
@@ -52,7 +52,7 @@ public class Penjualan {
         this.idGudang = idGudang;
     }
 
-    public void setTanggalPenjualan(Date tanggalPenjualan) {
+    public void setTanggalPenjualan(String tanggalPenjualan) {
         this.tanggalPenjualan = tanggalPenjualan;
     }
 
@@ -77,7 +77,7 @@ public class Penjualan {
     // DBO
     public static List<Penjualan> getAllPenjualan(){
         List<Penjualan> penjualanList = new ArrayList<>();
-        String sql = "SELECT * FROM Penjualan ORDER BY IDResep";
+        String sql = "SELECT * FROM Penjualan ORDER BY IDPenjualan";
         Connection conn = DatabaseManager.getInstance().getConnection();
 
         try (Statement stmt = conn.createStatement();
@@ -88,7 +88,7 @@ public class Penjualan {
                 Penjualan penjualan = new Penjualan();
                 penjualan.setIdPenjualan(rs.getInt("IDPenjualan"));
                 penjualan.setTotalPenjualan(rs.getInt("TotalHarga"));
-                penjualan.setTanggalPenjualan(rs.getDate("Tanggal"));
+                penjualan.setTanggalPenjualan(rs.getString("Tanggal"));
                 penjualan.setIdGudang(rs.getInt("IDGudang"));
                 
                 penjualanList.add(penjualan);
