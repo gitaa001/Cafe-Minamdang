@@ -20,6 +20,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 
 import java.io.InputStream;
+import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -162,7 +163,7 @@ public class ResepView implements BaseView {
                 
                 deleteBtn.setOnAction(event -> {
                     Resep resep = getTableView().getItems().get(getIndex());
-                    // deleteResep(resep);
+                    deleteResep(resep);
                 });
             }
             
@@ -264,6 +265,38 @@ public class ResepView implements BaseView {
         
         container.getChildren().addAll(formTitle, form, buttonBar);
         return container;
+    }
+
+    private void deleteResep(Resep resep) {
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Delete Recipe");
+        confirmDialog.setHeaderText("Delete " + resep.getNamaResep() + "?");
+        confirmDialog.setContentText("This action cannot be undone.");
+
+        DialogPane dialogPane = confirmDialog.getDialogPane();
+        dialogPane.setStyle(
+            "-fx-background-color: #F8F8F8;" +
+            "-fx-font-family: 'Arial';"
+        );
+
+        Label contentLabel = (Label) dialogPane.lookup(".content.label");
+        if (contentLabel != null) {
+            contentLabel.setFont(loadFont("Thin-SemiBold"));
+        }
+
+        dialogPane.getButtonTypes().stream().map(dialogPane::lookupButton).forEach(button -> {button.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;");
+            ((Button)button).setFont(loadFont("Thin-SemiBold"));
+        });
+
+        Optional<ButtonType> result = confirmDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK){
+            boolean success = resep.delete();
+            if (success) {
+                loadData();
+            } else {
+                showAlert("Error", "Failed to delete recipe!");
+            }
+        }
     }
 
     private HBox createFooter() {
@@ -372,7 +405,21 @@ public class ResepView implements BaseView {
     private void showAlert(String title, String message){
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
+        alert.setHeaderText(title);
         alert.setContentText(message);
+        
+        DialogPane dialogPane = alert.getDialogPane();
+
+        Label headerLabel = (Label) dialogPane.lookup(".header-panel .label");
+        if (headerLabel != null) {
+            headerLabel.setFont(loadFont("Thin-SemiBold"));
+            headerLabel.setTextFill(Color.WHITE);
+        }   
+            
+        Label contentLabel = (Label) dialogPane.lookup(".content.label");
+        if (contentLabel != null) {
+            contentLabel.setFont(loadFont("Thin-SemiBold"));
+        }
         alert.showAndWait();
     }
 
