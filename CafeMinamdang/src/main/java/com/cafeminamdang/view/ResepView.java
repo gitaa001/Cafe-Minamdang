@@ -8,32 +8,28 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.Group;
 import javafx.scene.Node;
 
-import java.io.InputStream;
-import java.lang.StackWalker.Option;
 import java.util.List;
 import java.util.Optional;
 
 public class ResepView implements BaseView {
+    private ResepController resepController;
     private BorderPane mainPane;
     private VBox listView;
     private VBox detailView;
     private VBox formView;
     private ObservableList<Resep> dataResep;
     private TableView<Resep> tableView;
-    private Font helvetica = Font.font("file:resources/Poppins-SemiBold.ttf", 12);
 
     public ResepView(){
+        resepController = new ResepController();
+
         mainPane = new BorderPane();
         mainPane.setPrefSize(800, 600);
 
@@ -66,7 +62,7 @@ public class ResepView implements BaseView {
      * to satisfy tableview parameter.
      */
     private void loadData(){
-        List<Resep> reseps = Resep.getAllResep();
+        List<Resep> reseps = resepController.getAllResep();
         dataResep = FXCollections.observableArrayList(reseps); // Wraping list ke observable list
         if (tableView != null){
             tableView.setItems(dataResep); // Table view mempunyai parameter observable list
@@ -236,22 +232,17 @@ public class ResepView implements BaseView {
         Button saveButton = new Button("Save");
         saveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill:white;");
         saveButton.setOnAction(e -> {
-            if (nameField.getText().isEmpty()){
-                showAlert("Error", "Recipe name is required");
-                return;
-            }
-
             // Mengambil data dari passing parameter pada showFormView(Resep resep)
             Resep resep = (Resep) form.getUserData();
             if (resep == null){
-                resep = new Resep();
+                // Buat resep baru
+                resep = resepController.createResep(nameField.getText(), descArea.getText(), instructionsArea.getText());
+            } else {
+                // Update resep
+                resep = resepController.updateResep(nameField.getText(), descArea.getText(), instructionsArea.getText(), resep);
             }
 
-            resep.setNamaResep(nameField.getText());
-            resep.setDeskripsi(descArea.getText());
-            resep.setPreskripsi(instructionsArea.getText());
-
-            boolean success = resep.save();
+            boolean success = resepController.saveResep(resep);
 
             if (success){
                 showListView();
@@ -279,6 +270,10 @@ public class ResepView implements BaseView {
             "-fx-font-family: 'Arial';"
         );
 
+        Label headLabel = (Label) dialogPane.lookup(".header-panel .label");
+        headLabel.setFont(loadFont("Thin-SemiBold"));
+
+
         Label contentLabel = (Label) dialogPane.lookup(".content.label");
         if (contentLabel != null) {
             contentLabel.setFont(loadFont("Thin-SemiBold"));
@@ -288,9 +283,10 @@ public class ResepView implements BaseView {
             ((Button)button).setFont(loadFont("Thin-SemiBold"));
         });
 
+        // Berdasarkan dokumentasi showAndWait berfungsi untuk melakukan blocking eksekusi dengan menunggu hasil masukan 
         Optional<ButtonType> result = confirmDialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK){
-            boolean success = resep.delete();
+            boolean success = resepController.deleteResep(resep);
             if (success) {
                 loadData();
             } else {
