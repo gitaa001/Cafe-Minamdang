@@ -1,7 +1,9 @@
+com\cafeminamdang\view\PurchasingMenuView.class
 com\cafeminamdang\database\DatabaseManager.class
 com\cafeminamdang\database\DatabaseInitiator.class
 com\cafeminamdang\controller\ResepController.class
 com\cafeminamdang\view\BaseView.class
+com\cafeminamdang\view\Role.class
 com\cafeminamdang\CafeMinamdangApplication.class
 com\cafeminamdang\model\Resep.class
 com\cafeminamdang\view\ResepView$1.class

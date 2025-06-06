@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ViewManager {
+    private Role role = null;
     private static ViewManager instance;
     private Stage primaryStage;
     private Map<String, Pane> viewCache = new HashMap<>();
@@ -57,5 +58,13 @@ public class ViewManager {
         Pane root = viewCache.get(name);
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+    }
+
+    public void setRole(Role role){
+        this.role = role;
+    }
+
+    public Role getRole(){
+        return role;
     }
 }
