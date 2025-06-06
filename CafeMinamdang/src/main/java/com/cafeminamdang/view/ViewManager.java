@@ -3,6 +3,7 @@ package com.cafeminamdang.view;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +42,21 @@ public class ViewManager {
         }
 
         Pane root = viewCache.get(name);
-        Scene scene = new Scene(root);
 
+        if (root instanceof BaseView){
+            ((BaseView)root).refresh();
+        }
+
+        Scene scene;
+        if (root.getScene() != null) {
+            scene = root.getScene();
+        } else {
+            scene = new Scene(root, 1000, 700); 
+        }
+    
         primaryStage.setScene(scene);
+        primaryStage.show();
+        Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
     public void initializeView(String name) {

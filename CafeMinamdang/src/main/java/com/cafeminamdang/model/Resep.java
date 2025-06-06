@@ -1,6 +1,6 @@
 package com.cafeminamdang.model;
 
-import com.cafeminamdang.Database.DatabaseManager;
+import com.cafeminamdang.database.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

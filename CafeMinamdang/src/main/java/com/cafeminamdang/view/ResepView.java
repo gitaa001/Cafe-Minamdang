@@ -31,7 +31,7 @@ public class ResepView implements BaseView {
         resepController = new ResepController();
 
         mainPane = new BorderPane();
-        mainPane.setPrefSize(800, 600);
+        mainPane.setPrefSize(1000, 700);
 
         HBox header = createHeader();
         mainPane.setTop(header);
@@ -84,9 +84,9 @@ public class ResepView implements BaseView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button backButton = new Button("Menu");
+        Button backButton = createIconButton("M1.5 0C2.32969 0 3 0.670312 3 1.5V17.25C3 17.6625 3.3375 18 3.75 18H22.5C23.3297 18 24 18.6703 24 19.5C24 20.3297 23.3297 21 22.5 21H3.75C1.67812 21 0 19.3219 0 17.25V1.5C0 0.670312 0.670312 0 1.5 0ZM7.5 9C8.32969 9 9 9.67031 9 10.5V13.5C9 14.3297 8.32969 15 7.5 15C6.67031 15 6 14.3297 6 13.5V10.5C6 9.67031 6.67031 9 7.5 9ZM13.5 6V13.5C13.5 14.3297 12.8297 15 12 15C11.1703 15 10.5 14.3297 10.5 13.5V6C10.5 5.17031 11.1703 4.5 12 4.5C12.8297 4.5 13.5 5.17031 13.5 6ZM16.5 7.5C17.3297 7.5 18 8.17031 18 9V13.5C18 14.3297 17.3297 15 16.5 15C15.6703 15 15 14.3297 15 13.5V9C15 8.17031 15.6703 7.5 16.5 7.5ZM22.5 3V13.5C22.5 14.3297 21.8297 15 21 15C20.1703 15 19.5 14.3297 19.5 13.5V3C19.5 2.17031 20.1703 1.5 21 1.5C21.8297 1.5 22.5 2.17031 22.5 3Z", 54, Color.WHITE, "#E43A3A", "#FF6B6B", "Dashboard");
         backButton.setOnAction(e -> {
-            ViewManager.getInstance().switchView("owner menu");
+            ViewManager.getInstance().switchView("owner dashboard");
         });
 
         header.getChildren().addAll(icon,titleLabel, spacer, backButton);
@@ -436,7 +436,7 @@ public class ResepView implements BaseView {
                     return poppins != null ? poppins : Font.getDefault();
                 } catch (Exception e){
                     e.printStackTrace();
-                    return new Font("System", 10);
+                    return new Font("System", 16);
                 }
             default:
                 try {
@@ -447,5 +447,37 @@ public class ResepView implements BaseView {
                     return new Font("System", 10);
                 }
         }
+    }
+
+    private Button createIconButton(String svgPath, double size, Color iconColor, String btnColor, String hoverColor, String text){
+        SVGPath path = new SVGPath();
+        path.setContent(svgPath);
+        path.setFill(iconColor);
+
+        StackPane iconContainer = new StackPane();
+        iconContainer.getChildren().add(path);
+
+        Button button = new Button(text);
+        button.setFont(loadFont("Thin-SemiBold"));
+        button.setTextFill(iconColor);
+        button.setGraphic(iconContainer);
+        button.setGraphicTextGap(10);
+        String buttonStyle = 
+            "-fx-background-color: " + btnColor + ";" +
+            "-fx-min-height: " + size + "px;" +
+            "-fx-padding: 0 15px 0 15px;"; 
+        
+        button.setStyle(buttonStyle);
+        
+        String hoverStyle = 
+            "-fx-background-color: " + hoverColor + ";" +
+            "-fx-min-height: " + size + "px;" +
+            "-fx-padding: 0 15px 0 15px;" +
+            "-fx-cursor: hand;";
+        
+        button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
+        button.setOnMouseExited(e -> button.setStyle(buttonStyle));
+        
+        return button;
     }
 }

@@ -34,7 +34,7 @@ public class OwnerDashboard implements BaseView {
         penjualanController = new PenjualanController();
 
         mainPane = new BorderPane();
-        mainPane.setPrefSize(800, 600);
+        mainPane.setPrefSize(1000, 700);
 
         HBox header = createHeader();
         mainPane.setTop(header);
@@ -79,12 +79,13 @@ public class OwnerDashboard implements BaseView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button backButton = new Button("Menu");
-        backButton.setOnAction(e -> {
-            ViewManager.getInstance().switchView(null);
-        });
+        Button recipeButton = createIconButton("M0 3C0 1.34531 1.34531 0 3 0H21C22.6547 0 24 1.34531 24 3V18C24 19.6547 22.6547 21 21 21H3C1.34531 21 0 19.6547 0 18V3ZM3 3V6H6V3H3ZM21 3H9V6H21V3ZM3 9V12H6V9H3ZM21 9H9V12H21V9ZM3 15V18H6V15H3ZM21 15H9V18H21V15Z", 54, Color.WHITE,"#E43A3A", "#FF6B6B", "Recipe");
 
-        header.getChildren().addAll(icon,titleLabel, spacer, backButton);
+        Button logout = createIconButton("M17.7141 3.46406L23.4703 9.22031C23.8078 9.55781 24 10.0219 24 10.5C24 10.9781 23.8078 11.4422 23.4703 11.7797L17.7141 17.5359C17.4141 17.8359 17.0109 18 16.5891 18C15.7125 18 15 17.2875 15 16.4109V13.5H9C8.17031 13.5 7.5 12.8297 7.5 12V9C7.5 8.17031 8.17031 7.5 9 7.5H15V4.58906C15 3.7125 15.7125 3 16.5891 3C17.0109 3 17.4141 3.16875 17.7141 3.46406ZM7.5 3H4.5C3.67031 3 3 3.67031 3 4.5V16.5C3 17.3297 3.67031 18 4.5 18H7.5C8.32969 18 9 18.6703 9 19.5C9 20.3297 8.32969 21 7.5 21H4.5C2.01562 21 0 18.9844 0 16.5V4.5C0 2.01562 2.01562 0 4.5 0H7.5C8.32969 0 9 0.670312 9 1.5C9 2.32969 8.32969 3 7.5 3Z", 54, Color.WHITE,"#E43A3A", "#FF6B6B", "Logout");
+
+        recipeButton.setOnAction(e ->  ViewManager.getInstance().switchView("resep"));
+
+        header.getChildren().addAll(icon,titleLabel, spacer, recipeButton, logout);
         return header;
     }
 
@@ -151,7 +152,7 @@ public class OwnerDashboard implements BaseView {
                     return poppins != null ? poppins : Font.getDefault();
                 } catch (Exception e){
                     e.printStackTrace();
-                    return new Font("System", 10);
+                    return new Font("System", 16);
                 }
             default:
                 try {
@@ -300,5 +301,37 @@ public class OwnerDashboard implements BaseView {
         }
 
         return salesChart;
+    }
+
+    private Button createIconButton(String svgPath, double size, Color iconColor, String btnColor, String hoverColor, String text){
+        SVGPath path = new SVGPath();
+        path.setContent(svgPath);
+        path.setFill(iconColor);
+
+        StackPane iconContainer = new StackPane();
+        iconContainer.getChildren().add(path);
+
+        Button button = new Button(text);
+        button.setFont(loadFont("Thin-SemiBold"));
+        button.setTextFill(iconColor);
+        button.setGraphic(iconContainer);
+        button.setGraphicTextGap(10);
+        String buttonStyle = 
+            "-fx-background-color: " + btnColor + ";" +
+            "-fx-min-height: " + size + "px;" +
+            "-fx-padding: 0 15px 0 15px;"; 
+        
+        button.setStyle(buttonStyle);
+        
+        String hoverStyle = 
+            "-fx-background-color: " + hoverColor + ";" +
+            "-fx-min-height: " + size + "px;" +
+            "-fx-padding: 0 15px 0 15px;" +
+            "-fx-cursor: hand;";
+        
+        button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
+        button.setOnMouseExited(e -> button.setStyle(buttonStyle));
+        
+        return button;
     }
 }

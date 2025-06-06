@@ -21,7 +21,7 @@ public class CafeMinamdangApplication extends Application {
         viewManager.registerView("resep", resepView.getRoot());
 
         OwnerDashboard ownerDashboard = new OwnerDashboard();
-        viewManager.registerView("owner menu", ownerDashboard.getRoot());
+        viewManager.registerView("owner dashboard", ownerDashboard.getRoot());
         
         viewManager.initializeView("resep");
         
