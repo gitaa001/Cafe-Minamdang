@@ -1,4 +1,4 @@
-package com.cafeminamdang.Database;
+package com.cafeminamdang.database;
 
 import java.sql.SQLException;
 
@@ -129,11 +129,11 @@ public class DatabaseInitiator {
                 // Format tanggal YY-MM-DD
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1,60000, 50)" 
+                    "VALUES (1, 'Pembelian Kopi Arabica', '2025-06-02', 1, 60000, 50)" 
                 );
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1,65000, 50)"
+                    "VALUES (2, 'Pembelian Kopi Robusta', '2025-06-02', 1, 65000, 50)"
                 );
                 stmt.execute(
                     "INSERT OR IGNORE INTO Invoice (IDInvoice, JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
@@ -148,6 +148,39 @@ public class DatabaseInitiator {
                     "VALUES (5, 'Pembelian Kopi Excelsa', '2025-06-02', 1, 40000, 50)"
                 );
                 logger.info("Sample Invoice data added");
+
+                stmt.execute(
+                    "CREATE TABLE IF NOT EXISTS Penjualan (" +
+                    "IDPenjualan INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                    "TotalHarga INTEGER NOT NULL," +
+                    "Tanggal DATE NOT NULL," +
+                    "IDGudang INTEGER NOT NULL," +
+                    "FOREIGN KEY(IDGudang) REFERENCES Gudang(IDGudang)" +
+                    ")"
+                );
+                logger.info("Penjualan table created");
+
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (300000, '2025-06-01', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (450000, '2025-06-02', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (200000, '2025-06-03', 2)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (500000, '2025-06-04', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (350000, '2025-06-05', 2)"
+                );
+                logger.info("Sample Penjualan data added");
                 
                 stmt.execute(
                     "CREATE TABLE IF NOT EXISTS Resep (" +
@@ -186,7 +219,7 @@ public class DatabaseInitiator {
         }
     }
     
-    public static void main(String[] args){
+    public static void tes(){
         var dburl = DatabaseInitiator.class.getClassLoader().getResource("CafeMinamdang.db");
         
         if (dburl != null) {
@@ -223,7 +256,6 @@ public class DatabaseInitiator {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
 

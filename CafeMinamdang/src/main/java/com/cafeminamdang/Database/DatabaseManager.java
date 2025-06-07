@@ -1,4 +1,4 @@
-package com.cafeminamdang.Database;
+package com.cafeminamdang.database;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -18,6 +18,8 @@ public class DatabaseManager {
     private DatabaseManager(){
         if (DEVELOPMENT_MODE){
             try {
+                DatabaseInitiator.tes();
+
                 var dburl = DatabaseManager.class.getClassLoader().getResource("CafeMinamdang.db");
                 System.out.println("Database URL: " + dburl);
                 
@@ -31,7 +33,7 @@ public class DatabaseManager {
                 System.out.println("File exists: " + dbFile.exists());
                 System.out.println("File size: " + dbFile.length() + " bytes");
                 String url = "jdbc:sqlite:" + dbFile.getPath();
-                Connection connection = DriverManager.getConnection(url);
+                connection = DriverManager.getConnection(url);
                 // logger.info("Connection to SQLite has been established");
     
                 // String url = "jdbc:sqlite:CafeMinamdang.db";
@@ -39,17 +41,9 @@ public class DatabaseManager {
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute("PRAGMA foreign_keys = ON"); // Setup biar foreign key always on
                 }
-                try {
-                    // Method 1: Standard connection
-                    System.out.println("\n=== METHOD 1: Standard Connection ===");
-                    try (Connection conn = DriverManager.getConnection(url)) {
-                        System.out.println("Standard connection established");
-                        checkTables(conn, "Standard");
-                    }
-                } catch (SQLException e){
-                    System.out.println("SQL Error: " + e.getMessage());
-                    e.printStackTrace();
-                }   
+                // Method 1: Standard connection
+                System.out.println("\n=== METHOD 1: Standard Connection ===");
+                checkTables(connection, "Standard");
             } catch (SQLException e) {
                 logger.info("Could not initialize database connection: " + e.getMessage());
             } catch (URISyntaxException e) {
