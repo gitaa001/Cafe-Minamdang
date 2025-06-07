@@ -1,6 +1,6 @@
 package com.cafeminamdang.view;
 
-import com.cafeminamdang.model.Resep;
+import com.cafeminamdang.Model.Resep;
 import com.cafeminamdang.controller.ResepController;
 
 import javafx.collections.ObservableList;

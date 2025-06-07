@@ -1,6 +1,6 @@
 package com.cafeminamdang.view;
 
-import com.cafeminamdang.model.Penjualan;
+import com.cafeminamdang.Model.Penjualan;
 import com.cafeminamdang.controller.PenjualanController;
 
 import java.util.List;

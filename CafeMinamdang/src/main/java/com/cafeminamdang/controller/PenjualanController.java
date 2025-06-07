@@ -1,8 +1,8 @@
 package com.cafeminamdang.controller;
 
-import com.cafeminamdang.model.Penjualan;
-
 import java.util.List;
+
+import com.cafeminamdang.Model.Penjualan;
 
 public class PenjualanController {
 
