@@ -76,6 +76,11 @@ public class OwnerDashboard implements BaseView {
 
         recipeButton.setOnAction(e ->  ViewManager.getInstance().switchView("resep"));
 
+        logout.setOnAction(e -> {
+            ViewManager.getInstance().setRole(null);
+            ViewManager.getInstance().switchView("menu");
+        });
+
         header.getChildren().addAll(icon,titleLabel, spacer, recipeButton, logout);
         return header;
     }

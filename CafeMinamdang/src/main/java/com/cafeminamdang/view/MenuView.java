@@ -73,17 +73,13 @@ public class MenuView implements BaseView {
         card.setPadding(new Insets(40, 40, 40, 40));
         card.setStyle("-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 30;");
 
-        Label welcome = new Label("Selamat Datang");
+        Label welcome = new Label("Selamat Datang Di Cafe Minamandang");
         welcome.setFont(loadFont("Title"));
-        welcome.setTextFill(Color.web("#7A2323"));
-
-        Label cafe = new Label("di Cafe Minamdang!");
-        cafe.setFont(loadFont("Title"));
-        cafe.setTextFill(Color.web("#E43A3A"));
+        welcome.setTextFill(Color.web("#000000"));
 
         Label loginAs = new Label("login sebagai");
-        loginAs.setFont(Font.font("Poppins", FontWeight.NORMAL, 14));
-        loginAs.setTextFill(Color.web("#7A2323"));
+        loginAs.setFont(loadFont("Thin-SemiBold"));
+        loginAs.setTextFill(Color.web("#000000"));
 
         ComboBox<String> authorityBox = new ComboBox<>();
         authorityBox.getItems().addAll("Business Owner", "Branch Manager", "Purchasing");
@@ -125,7 +121,7 @@ public class MenuView implements BaseView {
             }
         });
 
-        card.getChildren().addAll(welcome, cafe, loginAs, authorityBox, loginBtn);
+        card.getChildren().addAll(welcome, loginAs, authorityBox, loginBtn);
         return card;
     }
 
