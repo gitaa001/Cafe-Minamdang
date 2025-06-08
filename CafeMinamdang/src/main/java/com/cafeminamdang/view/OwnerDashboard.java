@@ -254,13 +254,14 @@ public class OwnerDashboard implements BaseView {
 
         java.util.SortedMap<String, Integer> salesByDate = new java.util.TreeMap<>();
 
-        // plotting titik-titik dari data yang ada
+        // Menjumlahkan total penjualan per hari berdasarkan idGudang yang dipilih
         for (Penjualan penjualan : penjualans){
             String date = penjualan.getTanggalPenjualan().toString();
             int currentSales = salesByDate.getOrDefault(date, 0);
             salesByDate.put(date, currentSales + penjualan.getTotalPenjualan());
         }
-
+        
+        // plotting titik-titik dari data yang ada
         for (java.util.SortedMap.Entry<String, Integer> entry : salesByDate.entrySet()){
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         }
@@ -287,13 +288,14 @@ public class OwnerDashboard implements BaseView {
         List<Penjualan> penjualans = penjualanController.getAllPenjualan();
         java.util.SortedMap<String, Integer> salesByDate = new java.util.TreeMap<>();
 
-        // plotting titik-titik dari data yang ada
+        // Penjumlahan sales total setiap gudang berdasarkan hari 
         for (Penjualan penjualan : penjualans){
             String date = penjualan.getTanggalPenjualan().toString();
             int currentSales = salesByDate.getOrDefault(date, 0);
             salesByDate.put(date, currentSales + penjualan.getTotalPenjualan());
         }
 
+        // plotting titik-titik dari data yang ada
         for (java.util.SortedMap.Entry<String, Integer> entry : salesByDate.entrySet()){
             series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
         }
