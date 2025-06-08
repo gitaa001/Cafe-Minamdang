@@ -93,13 +93,13 @@ public class BarangView implements BaseView {
         HBox controlBar = new HBox(10);
         controlBar.setAlignment(Pos.CENTER_LEFT);
 
-        Label titleLabel = new Label("Barang List");
+        Label titleLabel = new Label("Item List");
         titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button addButton = new Button("Add Barang");
+        Button addButton = new Button("Add Item");
         addButton.setFont(Font.font("Arial", FontWeight.BOLD, 12));
         addButton.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white;"); 
         addButton.setOnMouseEntered(e -> addButton.setStyle("-fx-background-color: #FFFFFF; -fx-text-fill: black;"));
@@ -140,18 +140,18 @@ public class BarangView implements BaseView {
                 
                 // getTableView().getItems.get(getIndex()); mendapatkan item pada index row tersebut
                 viewBtn.setOnAction(event -> {
-                    Barang resep = getTableView().getItems().get(getIndex());
-                    showDetailView(resep);
+                    Barang barang = getTableView().getItems().get(getIndex());
+                    showDetailView(barang);
                 });
                 
                 editBtn.setOnAction(event -> {
-                    Barang resep = getTableView().getItems().get(getIndex());
-                    showFormView(resep);
+                    Barang barang = getTableView().getItems().get(getIndex());
+                    showFormView(barang);
                 });
                 
                 deleteBtn.setOnAction(event -> {
-                    Barang resep = getTableView().getItems().get(getIndex());
-                    deleteResep(resep);
+                    Barang barang = getTableView().getItems().get(getIndex());
+                    deleteResep(barang);
                 });
             }
             
@@ -184,7 +184,7 @@ public class BarangView implements BaseView {
         VBox container = new VBox(20);
         container.setPadding(new Insets(20));
 
-        Label formTitle = new Label("Add New Barang");
+        Label formTitle = new Label("Add New Item");
         formTitle.setFont(Font.font("Arial", FontWeight.BOLD, 18));
 
         GridPane form = new GridPane();
@@ -192,7 +192,7 @@ public class BarangView implements BaseView {
         form.setVgap(10);
         form.setPadding(new Insets(20, 0, 0, 0));
 
-        Label nameLabel = new Label("Recipe Name:");
+        Label nameLabel = new Label("Item Name:");
         TextField nameField = new TextField();
         nameField.setPrefWidth(300);
 
@@ -241,17 +241,17 @@ public class BarangView implements BaseView {
             if (barang == null){
                 barang = barangController.createBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangArea.getText());
             } else {
-                // Update resep
+                // Update barang
                 barang = barangController.updateBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangArea.getText(), barang);
             }
 
-            boolean success = barangController.saveResep(barang);
+            boolean success = barangController.saveBarang(barang);
 
             if (success){
                 showListView();
                 loadData();
             } else {
-                showAlert("Error", "Failed to save recipe!");
+                showAlert("Error", "Failed to save item!");
             }
         });
 
@@ -293,7 +293,7 @@ public class BarangView implements BaseView {
             if (success) {
                 loadData();
             } else {
-                showAlert("Error", "Failed to delete recipe!");
+                showAlert("Error", "Failed to delete item!");
             }
         }
     }
@@ -340,7 +340,7 @@ public class BarangView implements BaseView {
         Label jenisTitle = new Label("Konsinyasi");
         jenisTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-        Label konsinyasi = new Label(barang.getIsKonsinyasi() ? "Ya" : "Bukan");
+        Label konsinyasi = new Label(barang.getIsKonsinyasi() ? "Ya" : "Tidak");
         konsinyasi.setWrapText(true);
 
         Label idGudangTitle = new Label("ID Gudang");
@@ -349,13 +349,18 @@ public class BarangView implements BaseView {
         Label idGudang = new Label(barang.getIDGudang());
         idGudang.setWrapText(true);
 
-        details.getChildren().addAll(descTitle, descText, stockTitle, jenisTitle, idGudangTitle);
+        details.getChildren().addAll(
+            descTitle, descText,
+            stockTitle, stock,
+            jenisTitle, konsinyasi,
+            idGudangTitle, idGudang
+        );
 
         HBox buttonBar = new HBox(10);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
         buttonBar.setPadding(new Insets(20, 0, 0, 0));
 
-        Button backButton = new Button("Back to list barang");
+        Button backButton = new Button("Back to items");
         backButton.setOnAction(e -> showListView());
 
         Button editButton = new Button("Edit Barang");
@@ -370,34 +375,28 @@ public class BarangView implements BaseView {
 
     private void showFormView(Barang barang){
         // Ambil children dari formView
-        // container.getChildren().addAll(formTitle, form, buttonBar); *Acuan di createFormView
+        
         GridPane form = (GridPane) formView.getChildren().get(1);
         Label formTitle = (Label) formView.getChildren().get(0); 
 
         // Kalo edit bakal ada resep di masukin ke node form
         form.setUserData(barang);
 
-        // form.add(nameLabel, 0, 0);
-        // form.add(nameField, 1, 0);
-        // form.add(descLabel, 0, 1);
-        // form.add(descArea, 1, 1);
-        // form.add(instructionsLabel, 0, 2);
-        // form.add(instructionsArea, 1, 2); *Acuan di createFormView
         TextField nameField = (TextField) form.getChildren().get(1);
         TextArea descArea = (TextArea) form.getChildren().get(3);
         Spinner<Integer> stockArea = (Spinner<Integer>) form.getChildren().get(5);
-        CheckBox konsinyasiArea = (CheckBox) form.getChildren().get(9);
-        TextArea idGudangArea = (TextArea) form.getChildren().get(5);
+        CheckBox konsinyasiArea = (CheckBox) form.getChildren().get(7);
+        TextArea idGudangArea = (TextArea) form.getChildren().get(9);
 
         if (barang == null){
-            formTitle.setText("Add New Recipe");
+            formTitle.setText("Add New Item");
             nameField.clear();
             descArea.clear();
-            stockArea.getValueFactory().setValue(0);
+            stockArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
             konsinyasiArea.setSelected(false);
             idGudangArea.clear();
         } else {
-            formTitle.setText("Edit Recipe");
+            formTitle.setText("Edit Item");
             nameField.setText(barang.getNamaBarang());
             descArea.setText(barang.getDeskripsi());
             stockArea.getValueFactory().setValue(barang.getKuantitas());

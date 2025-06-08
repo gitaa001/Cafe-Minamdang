@@ -22,7 +22,7 @@ public class BarangController {
      * @param resep
      * @return true if recipe is saved, false otherwise
      */
-    public boolean saveResep(Barang barang){
+    public boolean saveBarang(Barang barang){
         if (barang == null){
             return false;
         }
