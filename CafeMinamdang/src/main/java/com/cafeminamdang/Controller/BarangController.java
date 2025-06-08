@@ -1,8 +1,8 @@
-package com.cafeminamdang.Controller;
-
-import com.cafeminamdang.Model.Barang;
+package com.cafeminamdang.controller;
 
 import java.util.List;
+
+import com.cafeminamdang.model.Barang;
 
 public class BarangController {
     

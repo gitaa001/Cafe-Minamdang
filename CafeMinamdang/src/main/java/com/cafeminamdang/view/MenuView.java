@@ -79,7 +79,7 @@ public class MenuView implements BaseView {
 
         Label loginAs = new Label("login sebagai");
         loginAs.setFont(loadFont("Thin-SemiBold"));
-        loginAs.setTextFill(Color.web("#000000"));
+        loginAs.setTextFill(Color.web("#7A2323"));
 
         ComboBox<String> authorityBox = new ComboBox<>();
         authorityBox.getItems().addAll("Business Owner", "Branch Manager", "Purchasing");

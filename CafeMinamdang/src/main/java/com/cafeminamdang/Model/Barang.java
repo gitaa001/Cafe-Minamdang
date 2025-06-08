@@ -1,11 +1,11 @@
-package com.cafeminamdang.Model;
+package com.cafeminamdang.model;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.cafeminamdang.Database.DatabaseManager;
+import com.cafeminamdang.database.DatabaseManager;
 
 public class Barang {
     private static final Logger logger = Logger.getLogger(Barang.class.getName());

@@ -1,9 +1,9 @@
 package com.cafeminamdang.Driver;
 
-import com.cafeminamdang.Model.Barang;
-
 import java.util.List;
 import java.util.Scanner;
+
+import com.cafeminamdang.model.Barang;
 
 public class BarangDriver {
     private static final Scanner scanner = new Scanner(System.in);
