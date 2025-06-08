@@ -111,8 +111,8 @@ public class BarangView implements BaseView {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         // Penerapan callback function dengan melakukan binding suatu objek dengan getter pada modal
-        TableColumn<Barang, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(cellData -> cellData.getValue().getIDBarangProperty());
+        TableColumn<Barang, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(cellData -> javafx.beans.binding.Bindings.createObjectBinding(() -> cellData.getValue().getIDBarang()));
 
         TableColumn<Barang, String> namaColumn = new TableColumn<>("Nama Barang");
         namaColumn.setCellValueFactory(cellData -> javafx.beans.binding.Bindings.createStringBinding(() -> cellData.getValue().getNamaBarang()));
@@ -210,9 +210,9 @@ public class BarangView implements BaseView {
         CheckBox konsinyasiCheckBox = new CheckBox("Apakah barang konsinyasi?");
 
         Label idGudangLabel = new Label("ID Gudang:");
-        TextArea idGudangArea = new TextArea();
-        idGudangArea.setPrefRowCount(6);
-        idGudangArea.setWrapText(true);
+        Spinner<Integer> idGudangSpinner = new Spinner<>(0, Integer.MAX_VALUE, 0);
+        idGudangSpinner.setEditable(true);
+        idGudangSpinner.setPrefWidth(300);
 
         // Menaruh UI berdasarkan grid dengan parameter (kolom,row)
         form.add(nameLabel, 0, 0);
@@ -224,7 +224,7 @@ public class BarangView implements BaseView {
         form.add(konsinyasiLabel, 0, 3);
         form.add(konsinyasiCheckBox, 1, 3);
         form.add(idGudangLabel, 0, 4);
-        form.add(idGudangArea, 1, 4);
+        form.add(idGudangSpinner, 1, 4);
 
         HBox buttonBar = new HBox(10);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
@@ -239,10 +239,10 @@ public class BarangView implements BaseView {
             // Mengambil data dari passing parameter pada showFormView(Resep resep)
             Barang barang = (Barang) form.getUserData();
             if (barang == null){
-                barang = barangController.createBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangArea.getText());
+                barang = barangController.createBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangSpinner.getValue());
             } else {
                 // Update barang
-                barang = barangController.updateBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangArea.getText(), barang);
+                barang = barangController.updateBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangSpinner.getValue(), barang);
             }
 
             boolean success = barangController.saveBarang(barang);
@@ -346,7 +346,7 @@ public class BarangView implements BaseView {
         Label idGudangTitle = new Label("ID Gudang");
         idGudangTitle.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-        Label idGudang = new Label(barang.getIDGudang());
+        Label idGudang = new Label(String.valueOf(barang.getIDGudang()));
         idGudang.setWrapText(true);
 
         details.getChildren().addAll(
@@ -386,7 +386,7 @@ public class BarangView implements BaseView {
         TextArea descArea = (TextArea) form.getChildren().get(3);
         Spinner<Integer> stockArea = (Spinner<Integer>) form.getChildren().get(5);
         CheckBox konsinyasiArea = (CheckBox) form.getChildren().get(7);
-        TextArea idGudangArea = (TextArea) form.getChildren().get(9);
+        Spinner<Integer> idGudangArea = (Spinner<Integer>) form.getChildren().get(9);
 
         if (barang == null){
             formTitle.setText("Add New Item");
@@ -394,14 +394,14 @@ public class BarangView implements BaseView {
             descArea.clear();
             stockArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
             konsinyasiArea.setSelected(false);
-            idGudangArea.clear();
+            idGudangArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
         } else {
             formTitle.setText("Edit Item");
             nameField.setText(barang.getNamaBarang());
             descArea.setText(barang.getDeskripsi());
             stockArea.getValueFactory().setValue(barang.getKuantitas());
             konsinyasiArea.setSelected(barang.getIsKonsinyasi());
-            idGudangArea.setText(barang.getIDGudang());
+            idGudangArea.getValueFactory().setValue(barang.getIDGudang());
         }
 
         mainPanel.setCenter(formView);

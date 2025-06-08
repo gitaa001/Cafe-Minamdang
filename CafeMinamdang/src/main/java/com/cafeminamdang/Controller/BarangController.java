@@ -62,27 +62,13 @@ public class BarangController {
      * @param preskripsi
      * @return newly created Resep object
      */
-    public Barang createBarang(String namaBarang, String deskripsi, Integer kuantitas, Boolean isKonsinyasi, String idGudang){
+    public Barang createBarang(String namaBarang, String deskripsi, Integer kuantitas, Boolean isKonsinyasi, Integer idGudang){
         Barang barang = new Barang();
-        
-        // Ambil ID terakhir dari database
-        String lastId = Barang.getLastBarangId(); // Misalnya "B012"
-        int nextNumber = 1;
-
-        if (lastId != null && lastId.matches("B\\d{3}")) {
-            nextNumber = Integer.parseInt(lastId.substring(1)) + 1;
-        }
-
-        // Buat ID baru dengan format B###
-        String newId = String.format("B%03d", nextNumber);
-        barang.setIdBarang(newId);
-
         barang.setNamaBarang(namaBarang);
         barang.setDeskripsi(deskripsi);
         barang.setKuantitas(kuantitas);
         barang.setKonsinyasi(isKonsinyasi);
         barang.setIdGudang(idGudang);
-
         return barang;
     }
 
@@ -97,7 +83,7 @@ public class BarangController {
      * @param resep
      * @return newly updated Resep object
      */
-    public Barang updateBarang(String namaBarang, String deskripsi, Integer kuantitas, Boolean isKonsinyasi, String idGudang, Barang barang){
+    public Barang updateBarang(String namaBarang, String deskripsi, Integer kuantitas, Boolean isKonsinyasi, Integer idGudang, Barang barang){
         barang.setNamaBarang(namaBarang);
         barang.setDeskripsi(deskripsi);
         barang.setKuantitas(kuantitas);

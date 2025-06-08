@@ -55,7 +55,7 @@ public class BarangDriver {
 
     private static void updateBarang() {
         System.out.print("Masukkan ID Barang yang ingin diupdate: ");
-        String id = scanner.nextLine();
+        Integer id = Integer.parseInt(scanner.nextLine());
         Barang b = Barang.getBarangByID(id);
         if (b == null) {
             System.out.println("Barang tidak ditemukan.");
@@ -73,14 +73,14 @@ public class BarangDriver {
 
     private static void hapusBarang() {
         System.out.print("Masukkan ID Barang yang ingin dihapus: ");
-        String id = scanner.nextLine();
+        Integer id = Integer.parseInt(scanner.nextLine());
         boolean success = Barang.deleteById(id);
         System.out.println(success ? "Berhasil dihapus." : "Gagal menghapus.");
     }
 
     private static void cariBarang() {
         System.out.print("Masukkan ID Barang: ");
-        String id = scanner.nextLine();
+        Integer id = Integer.parseInt(scanner.nextLine());
         Barang b = Barang.getBarangByID(id);
         if (b != null) {
             printBarang(b);
@@ -91,7 +91,7 @@ public class BarangDriver {
 
     private static Barang inputBarang() {
         System.out.print("ID Barang: ");
-        String id = scanner.nextLine();
+        Integer id = Integer.parseInt(scanner.nextLine());
         System.out.print("Nama: ");
         String nama = scanner.nextLine();
         System.out.print("Deskripsi: ");
@@ -101,7 +101,7 @@ public class BarangDriver {
         System.out.print("Konsinyasi (true/false): ");
         boolean konsinyasi = Boolean.parseBoolean(scanner.nextLine());
         System.out.print("ID Gudang: ");
-        String idGudang = scanner.nextLine();
+        Integer idGudang = Integer.parseInt(scanner.nextLine());
 
         return new Barang(id, nama, deskripsi, qty, konsinyasi, idGudang);
     }
