@@ -12,7 +12,8 @@ public class ViewManager {
     private Role role = null;
     private static ViewManager instance;
     private Stage primaryStage;
-    private Map<String, Pane> viewCache = new HashMap<>();
+    private Map<String, BaseView> viewCache = new HashMap<>();
+    private int currentGudang = 0;
 
     private ViewManager(){
     }
@@ -28,34 +29,48 @@ public class ViewManager {
         this.primaryStage = primaryStage;
     }
 
-    public void registerView(String name, Pane view){
+    public void registerView(String name, BaseView view){
         viewCache.put(name, view);
     }
 
     public void switchView(String name){
-        if (primaryStage == null){
-            throw new IllegalStateException("Primary stage not set");
+        if (primaryStage == null) {
+                throw new IllegalStateException("Primary stage not set");
         }
-
-        if (!viewCache.containsKey(name)){
-            throw new IllegalArgumentException("View not registered: " + name);
+        
+        BaseView view = viewCache.get(name);
+        
+        if (view == null) {
+            switch (name) {
+                case "barang":
+                    view = new BarangView();
+                    viewCache.put(name, view);
+                    break;
+                case "resep":
+                    view = new ResepView();
+                    viewCache.put(name, view);
+                    break;
+                case "owner dashboard":
+                    view = new OwnerDashboard();
+                    viewCache.put(name, view);
+                    break;
+                default:
+                    throw new IllegalArgumentException("No view registered with name: " + name);
+            }
         }
+        
+        Pane root = view.getRoot();
+        Scene scene = primaryStage.getScene();
 
-        Pane root = viewCache.get(name);
-
-        if (root instanceof BaseView){
-            ((BaseView)root).refresh();
-        }
-
-        Scene scene;
-        if (root.getScene() != null) {
-            scene = root.getScene();
+        if (scene == null) {
+            scene = new Scene(root);
+            primaryStage.setScene(scene);
         } else {
-            scene = new Scene(root, 1000, 700); 
+            scene.setRoot(root);
         }
-    
-        primaryStage.setScene(scene);
-        primaryStage.show();
+
+        view.refresh();
+
         Platform.runLater(() -> primaryStage.sizeToScene());
     }
 
@@ -68,8 +83,8 @@ public class ViewManager {
             throw new IllegalArgumentException("View not registered: " + name);
         }
         
-        Pane root = viewCache.get(name);
-        Scene scene = new Scene(root);
+        BaseView root = viewCache.get(name);
+        Scene scene = new Scene(root.getRoot());
         primaryStage.setScene(scene);
     }
 
@@ -79,5 +94,14 @@ public class ViewManager {
 
     public Role getRole(){
         return role;
+    }
+
+    public int getIdGudang(){
+        return currentGudang;
+    }
+
+    public void setIdGudang(int IdGudang){
+        System.out.println(IdGudang);
+        this.currentGudang = IdGudang;
     }
 }

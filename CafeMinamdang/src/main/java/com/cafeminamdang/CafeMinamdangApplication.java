@@ -20,17 +20,8 @@ public class CafeMinamdangApplication extends Application {
         ViewManager viewManager = ViewManager.getInstance();
         viewManager.setPrimaryStage(primaryStage);
         
-        BarangView barangView = new BarangView();
-        viewManager.registerView("branch manager dashboard", barangView.getRoot());
-        
         MenuView menuView = new MenuView();
-        viewManager.registerView("menu", menuView.getRoot());
-        
-        ResepView resepView = new ResepView();
-        viewManager.registerView("resep", resepView.getRoot());
-
-        OwnerDashboard ownerDashboard = new OwnerDashboard();
-        viewManager.registerView("owner dashboard", ownerDashboard.getRoot());
+        viewManager.registerView("menu", menuView);
         
         viewManager.initializeView("menu");
         

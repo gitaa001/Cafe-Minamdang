@@ -1,5 +1,8 @@
 package com.cafeminamdang.view;
 
+import com.cafeminamdang.model.Penjualan;
+import com.cafeminamdang.controller.PenjualanController;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,11 +21,15 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.util.*;
+
 public class MenuView implements BaseView {
+    private PenjualanController penjualanController;
     private BorderPane mainPane;
     private VBox loginCard;
 
     public MenuView() {
+        penjualanController = new PenjualanController();
         mainPane = new BorderPane();
         mainPane.setPrefSize(1000, 700);
 
@@ -81,26 +88,64 @@ public class MenuView implements BaseView {
         loginAs.setFont(loadFont("Thin-SemiBold"));
         loginAs.setTextFill(Color.web("#000000"));
 
+        
         ComboBox<String> authorityBox = new ComboBox<>();
         authorityBox.getItems().addAll("Business Owner", "Branch Manager", "Purchasing");
         authorityBox.setPromptText("pilih otoritas Anda");
         authorityBox.setPrefWidth(250);
         authorityBox.setStyle("-fx-font-size: 14;");
-
+        
         Button loginBtn = new Button("Login");
         loginBtn.setFont(Font.font("Poppins", FontWeight.BOLD, 16));
         loginBtn.setStyle("-fx-background-color: #E43A3A; -fx-text-fill: white; -fx-background-radius: 10;");
         loginBtn.setPrefWidth(250);
         loginBtn.setPrefHeight(40);
+        
+        Label gudang = new Label("gudang");
+        gudang.setFont(loadFont("Thin-SemiBold"));
+        gudang.setTextFill(Color.web("#000000"));
+
+        List<Integer> uniqueWh = new ArrayList<>();
+        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+        
+        ComboBox<String> gudangChoiceBox = new ComboBox<>();
+        gudangChoiceBox.setPromptText("pilih gudang Anda");
+        gudangChoiceBox.setPrefWidth(250);
+        gudangChoiceBox.setStyle("-fx-font-size: 14;");
+        
+        for (Penjualan penjualan : penjualans){
+            int warehouseId = penjualan.getIdGudang();
+            if(!uniqueWh.contains(warehouseId)){
+                uniqueWh.add(warehouseId);
+                gudangChoiceBox.getItems().add("Warehouse " + warehouseId);
+            }
+        }
 
         loginBtn.setOnAction(event -> {
             String selected = authorityBox.getValue();
+            Integer selectedGudang = null;
+            
+            if (gudangChoiceBox.getValue() != null) {
+                try {
+                    String warehouseStr = gudangChoiceBox.getValue().replace("Warehouse ", "");
+                    selectedGudang = Integer.parseInt(warehouseStr);
+                } catch (NumberFormatException e) {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Gudang tidak valid!", ButtonType.OK);
+                    alert.showAndWait();
+                    return;
+                }
+            }
+            
             if (selected == null) {
-                // Show warning if nothing is selected
                 Alert alert = new Alert(Alert.AlertType.WARNING, "Silakan pilih otoritas Anda!", ButtonType.OK);
                 alert.showAndWait();
                 return;
+            } else if ((selected.equals("Branch Manager") || selected.equals("Purchasing")) && selectedGudang == null) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "Silakan pilih gudang Anda!", ButtonType.OK);
+                alert.showAndWait();
+                return;
             }
+            
             ViewManager viewManager = ViewManager.getInstance();
             switch (selected) {
                 case "Business Owner":
@@ -108,20 +153,22 @@ public class MenuView implements BaseView {
                     viewManager.switchView("owner dashboard");
                     break;
                 case "Branch Manager":
-                viewManager.setRole(Role.BRANCH_MANAGER);
-                    viewManager.switchView("branch manager dashboard");
+                    viewManager.setRole(Role.BRANCH_MANAGER);
+                    System.out.println(selectedGudang);
+                    viewManager.setIdGudang(selectedGudang);
+                    viewManager.switchView("barang");
                     break;
                 case "Purchasing":
                     viewManager.setRole(Role.PURCHASING);
+                    viewManager.setIdGudang(selectedGudang);
                     viewManager.switchView("purchasing dashboard");
                     break;
                 default:
-                    // Optionally show an error
                     break;
             }
         });
 
-        card.getChildren().addAll(welcome, loginAs, authorityBox, loginBtn);
+        card.getChildren().addAll(welcome, loginAs, authorityBox, gudang, gudangChoiceBox, loginBtn);
         return card;
     }
 

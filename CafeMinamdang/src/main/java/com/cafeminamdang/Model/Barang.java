@@ -174,4 +174,35 @@ public class Barang {
 
         return false;
     }
+
+    public static List<Barang> getAllBarangFromSpesificWh(int gudangID){
+        List<Barang> barangList = new ArrayList<>();
+        String sql = "SELECT * FROM Barang WHERE IDGudang = ? ORDER BY IDBarang";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (PreparedStatement ptsmt = conn.prepareStatement(sql)) {
+
+            ptsmt.setInt(1, gudangID);
+            ResultSet rs = ptsmt.executeQuery();
+            // int i = 1;
+
+            while (rs.next()) {
+                Barang barang = new Barang();
+                barang.setIdBarang(rs.getInt("IDBarang"));
+                barang.setNamaBarang(rs.getString("NamaBarang"));
+                barang.setDeskripsi(rs.getString("Deskripsi"));
+                barang.setKuantitas(rs.getInt("Kuantitas"));
+                barang.setKonsinyasi(rs.getBoolean("IsKonsinyasi"));
+                barang.setIdGudang(rs.getInt("IDGudang"));
+                
+                barangList.add(barang);
+                // System.out.println((i++) + resep.toString());
+            }
+        } catch (SQLException e) {
+            logger.info("Error retrieving recipes : " + e.getMessage());
+            return null;
+        }
+
+        return barangList;
+    }
 }

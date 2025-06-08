@@ -1,6 +1,5 @@
 com\cafeminamdang\database\DatabaseManager.class
 com\cafeminamdang\view\MenuView.class
-com\cafeminamdang\Driver\BarangDriver.class
 com\cafeminamdang\model\Barang.class
 com\cafeminamdang\database\DatabaseInitiator.class
 com\cafeminamdang\controller\ResepController.class

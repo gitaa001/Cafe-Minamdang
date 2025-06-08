@@ -7,7 +7,7 @@ import com.cafeminamdang.model.Barang;
 public class BarangController {
     
     /**
-     * Controller for getting all the recipe in database.
+     * Controller for getting all the inventory item in database.
      * Acts as an intermediary from view and model.
      * @return list of recipes
      */
@@ -16,11 +16,11 @@ public class BarangController {
     }
 
     /**
-     * Controller for saving a recipe based on the input on 
+     * Controller for saving a inventory item based on the input on 
      * the view. Acts as an intermediary from view and model.
-     * Expects a recipe as a parameter.
+     * Expects a inventory item as a parameter.
      * @param resep
-     * @return true if recipe is saved, false otherwise
+     * @return true if inventory item is saved, false otherwise
      */
     public boolean saveBarang(Barang barang){
         if (barang == null){
@@ -35,11 +35,11 @@ public class BarangController {
     }
 
     /**
-     * Controller for deleting a recipe based on the input on 
+     * Controller for deleting a inventory item based on the input on 
      * the view. Acts as an intermediary from view and model.
-     * Expects a recipe as a parameter.
+     * Expects a inventory item as a parameter.
      * @param resep
-     * @return true if recipe is deleted, false otherwise
+     * @return true if inventory item is deleted, false otherwise
      */
     public boolean deleteBarang(Barang barang){
         if (barang == null){
@@ -54,7 +54,7 @@ public class BarangController {
     }
 
     /**
-     * Controller for creating a new recipe object to be inserted
+     * Controller for creating a new inventory item object to be inserted
      * on the database. Acts as an intermediary from view and model.
      * Expects namaResep, deskripsi, preskripsi as the parameter.
      * @param namaResep
@@ -74,7 +74,7 @@ public class BarangController {
 
 
     /**
-     * Controller for updating existing recipe object on the database. 
+     * Controller for updating existing inventory item object on the database. 
      * Acts as an intermediary from view and model. Expects namaResep, 
      * deskripsi, preskripsi as the parameter.
      * @param namaResep
@@ -90,5 +90,9 @@ public class BarangController {
         barang.setKonsinyasi(isKonsinyasi);
         barang.setIdGudang(idGudang);
         return barang;
+    }
+
+    public List<Barang> getSpesifiedWhBarang(int IDGudang){
+        return Barang.getAllBarangFromSpesificWh(IDGudang);
     }
 }

@@ -54,10 +54,12 @@ public class BarangView implements BaseView {
     @Override
     public void refresh() {
         loadData();
+        mainPanel.setCenter(listView);
     }
 
     private void loadData() {
-        List<Barang> barangs = barangController.getAllBarang();
+        System.out.println(ViewManager.getInstance().getIdGudang());
+        List<Barang> barangs = barangController.getSpesifiedWhBarang(ViewManager.getInstance().getIdGudang());
         dataBarang = FXCollections.observableArrayList(barangs);
         tableView.setItems(dataBarang);
     }
@@ -81,6 +83,7 @@ public class BarangView implements BaseView {
         Button backButton = createIconButton("M17.7141 3.46406L23.4703 9.22031C23.8078 9.55781 24 10.0219 24 10.5C24 10.9781 23.8078 11.4422 23.4703 11.7797L17.7141 17.5359C17.4141 17.8359 17.0109 18 16.5891 18C15.7125 18 15 17.2875 15 16.4109V13.5H9C8.17031 13.5 7.5 12.8297 7.5 12V9C7.5 8.17031 8.17031 7.5 9 7.5H15V4.58906C15 3.7125 15.7125 3 16.5891 3C17.0109 3 17.4141 3.16875 17.7141 3.46406ZM7.5 3H4.5C3.67031 3 3 3.67031 3 4.5V16.5C3 17.3297 3.67031 18 4.5 18H7.5C8.32969 18 9 18.6703 9 19.5C9 20.3297 8.32969 21 7.5 21H4.5C2.01562 21 0 18.9844 0 16.5V4.5C0 2.01562 2.01562 0 4.5 0H7.5C8.32969 0 9 0.670312 9 1.5C9 2.32969 8.32969 3 7.5 3Z", 54, Color.WHITE,"#E43A3A", "#FF6B6B", "Logout");
         backButton.setOnAction(e -> {
             ViewManager.getInstance().setRole(null);
+            ViewManager.getInstance().setIdGudang(0);
             ViewManager.getInstance().switchView("menu");
         });
 
@@ -211,11 +214,6 @@ public class BarangView implements BaseView {
         Label konsinyasiLabel = new Label("Konsinyasi:");
         CheckBox konsinyasiCheckBox = new CheckBox("Apakah barang konsinyasi?");
 
-        Label idGudangLabel = new Label("ID Gudang:");
-        Spinner<Integer> idGudangSpinner = new Spinner<>(0, Integer.MAX_VALUE, 0);
-        idGudangSpinner.setEditable(true);
-        idGudangSpinner.setPrefWidth(300);
-
         // Menaruh UI berdasarkan grid dengan parameter (kolom,row)
         form.add(nameLabel, 0, 0);
         form.add(nameField, 1, 0);
@@ -225,8 +223,6 @@ public class BarangView implements BaseView {
         form.add(stockSpinner, 1, 2);
         form.add(konsinyasiLabel, 0, 3);
         form.add(konsinyasiCheckBox, 1, 3);
-        form.add(idGudangLabel, 0, 4);
-        form.add(idGudangSpinner, 1, 4);
 
         HBox buttonBar = new HBox(10);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
@@ -241,10 +237,10 @@ public class BarangView implements BaseView {
             // Mengambil data dari passing parameter pada showFormView(Resep resep)
             Barang barang = (Barang) form.getUserData();
             if (barang == null){
-                barang = barangController.createBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangSpinner.getValue());
+                barang = barangController.createBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), ViewManager.getInstance().getIdGudang());
             } else {
                 // Update barang
-                barang = barangController.updateBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), idGudangSpinner.getValue(), barang);
+                barang = barangController.updateBarang(nameField.getText(), descArea.getText(), stockSpinner.getValue(), konsinyasiCheckBox.isSelected(), ViewManager.getInstance().getIdGudang(), barang);
             }
 
             boolean success = barangController.saveBarang(barang);
@@ -388,7 +384,6 @@ public class BarangView implements BaseView {
         TextArea descArea = (TextArea) form.getChildren().get(3);
         Spinner<Integer> stockArea = (Spinner<Integer>) form.getChildren().get(5);
         CheckBox konsinyasiArea = (CheckBox) form.getChildren().get(7);
-        Spinner<Integer> idGudangArea = (Spinner<Integer>) form.getChildren().get(9);
 
         if (barang == null){
             formTitle.setText("Add New Item");
@@ -396,14 +391,12 @@ public class BarangView implements BaseView {
             descArea.clear();
             stockArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
             konsinyasiArea.setSelected(false);
-            idGudangArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0));
         } else {
             formTitle.setText("Edit Item");
             nameField.setText(barang.getNamaBarang());
             descArea.setText(barang.getDeskripsi());
             stockArea.getValueFactory().setValue(barang.getKuantitas());
             konsinyasiArea.setSelected(barang.getIsKonsinyasi());
-            idGudangArea.getValueFactory().setValue(barang.getIDGudang());
         }
 
         mainPanel.setCenter(formView);
