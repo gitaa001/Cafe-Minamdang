@@ -64,13 +64,28 @@ public class BarangController {
      */
     public Barang createBarang(String namaBarang, String deskripsi, Integer kuantitas, Boolean isKonsinyasi, String idGudang){
         Barang barang = new Barang();
+        
+        // Ambil ID terakhir dari database
+        String lastId = Barang.getLastBarangId(); // Misalnya "B012"
+        int nextNumber = 1;
+
+        if (lastId != null && lastId.matches("B\\d{3}")) {
+            nextNumber = Integer.parseInt(lastId.substring(1)) + 1;
+        }
+
+        // Buat ID baru dengan format B###
+        String newId = String.format("B%03d", nextNumber);
+        barang.setIdBarang(newId);
+
         barang.setNamaBarang(namaBarang);
         barang.setDeskripsi(deskripsi);
         barang.setKuantitas(kuantitas);
         barang.setKonsinyasi(isKonsinyasi);
         barang.setIdGudang(idGudang);
+
         return barang;
     }
+
 
     /**
      * Controller for updating existing recipe object on the database. 

@@ -78,7 +78,7 @@ public class BarangView implements BaseView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        Button backButton = new Button("Dashboard");
+        Button backButton = new Button("Logout");
         backButton.setStyle("-fx-background-color: white; -fx-text-fill: #E43A3A;");
         backButton.setOnAction(e -> ViewManager.getInstance().switchView("owner dashboard"));
 

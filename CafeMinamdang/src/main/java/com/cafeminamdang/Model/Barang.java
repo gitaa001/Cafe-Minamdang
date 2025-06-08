@@ -182,4 +182,34 @@ public class Barang {
 
         return false;
     }
+
+    //Method tambahan buat ambil last ID karena ID dibuat increment
+    public static String getLastBarangId() {
+        String lastId = null;
+        String query = "SELECT idbarang FROM barang ORDER BY idbarang DESC LIMIT 1";
+
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                lastId = rs.getString("idbarang");
+
+                // Misal lastId = "B012", kita ambil angka lalu +1
+                int number = Integer.parseInt(lastId.replaceAll("[^\\d]", ""));
+                number += 1;
+
+                // Format kembali menjadi ID seperti "B013"
+                return String.format("B%03d", number);
+            } else {
+                // Kalau belum ada data sama sekali
+                return "B001";
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
