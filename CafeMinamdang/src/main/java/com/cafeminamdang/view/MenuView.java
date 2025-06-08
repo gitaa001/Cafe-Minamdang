@@ -108,13 +108,16 @@ public class MenuView implements BaseView {
             ViewManager viewManager = ViewManager.getInstance();
             switch (selected) {
                 case "Business Owner":
-                    viewManager.initializeView("owner dashboard");
+                    viewManager.setRole(Role.BUSINESS_OWNER);
+                    viewManager.switchView("business owner dashboard");
                     break;
                 case "Branch Manager":
-                    viewManager.initializeView("branch manager dashboard");
+                viewManager.setRole(Role.BRANCH_MANAGER);
+                    viewManager.switchView("branch manager dashboard");
                     break;
                 case "Purchasing":
-                    viewManager.initializeView("purchasing dashboard");
+                    viewManager.setRole(Role.PURCHASING);
+                    viewManager.switchView("purchasing dashboard");
                     break;
                 default:
                     // Optionally show an error
