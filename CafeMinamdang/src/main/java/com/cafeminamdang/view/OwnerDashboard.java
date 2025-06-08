@@ -18,7 +18,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -28,7 +27,6 @@ import javafx.scene.chart.XYChart;
 public class OwnerDashboard implements BaseView {
     private PenjualanController penjualanController;
     private BorderPane mainPane;
-    private VBox centerView;
     private AreaChart<String, Number> currentAreaChart;
 
     public OwnerDashboard(){
@@ -159,66 +157,81 @@ public class OwnerDashboard implements BaseView {
     }
 
     private Node createDashboardView(){
-        GridPane dashboard = new GridPane();
-        dashboard.setPadding(new Insets(20));
-        dashboard.setHgap(10);
-        dashboard.setVgap(10);
+        if (penjualanController.getAllPenjualan() != null){
+            GridPane dashboard = new GridPane();
+            dashboard.setPadding(new Insets(20));
+            dashboard.setHgap(10);
+            dashboard.setVgap(10);
 
-        HBox filterByWarehouse = new HBox(20);
-        filterByWarehouse.setAlignment(Pos.CENTER_LEFT);
-        
-        Label filter = new Label("Select Warehouse");
-        filter.setFont(loadFont("Thin-SemiBold"));
-        
-        List<Integer> uniqueWh = new ArrayList<>();
-        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
-        ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        for (Penjualan penjualan : penjualans){
-            int warehouseId = penjualan.getIdGudang();
-            if(!uniqueWh.contains(warehouseId)){
-                uniqueWh.add(warehouseId);
-                choiceBox.getItems().add("Warehouse " + warehouseId);
-            }
-        }
-
-        
-        filterByWarehouse.getChildren().addAll(filter, choiceBox);
-        
-        LineChart<String, Number> salesChart1 = createSalesChart();
-        currentAreaChart = createAreaChart(1);
-        // PieChart salesChart4 = createPieChart();
-        
-        // kolom, baris, span kolom, span baris
-        dashboard.add(filterByWarehouse, 0, 0);
-        dashboard.add(salesChart1, 0, 1);
-        dashboard.add(currentAreaChart, 0, 2);
-        // dashboard.add(salesChart3, 0, 2);
-        // dashboard.add(salesChart4, 1, 2);
-
-        choiceBox.setOnAction(e -> {
-            String selected = choiceBox.getValue();
-            int warehouseId = Integer.parseInt(selected.replace("Warehouse ", ""));
+            HBox filterByWarehouse = new HBox(20);
+            filterByWarehouse.setAlignment(Pos.CENTER_LEFT);
             
-            dashboard.getChildren().remove(currentAreaChart);
+            Label filter = new Label("Select Warehouse");
+            filter.setFont(loadFont("Thin-SemiBold"));
+            
+            List<Integer> uniqueWh = new ArrayList<>();
+            List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+            ChoiceBox<String> choiceBox = new ChoiceBox<>();
+            for (Penjualan penjualan : penjualans){
+                int warehouseId = penjualan.getIdGudang();
+                if(!uniqueWh.contains(warehouseId)){
+                    uniqueWh.add(warehouseId);
+                    choiceBox.getItems().add("Warehouse " + warehouseId);
+                }
+            }
 
-            currentAreaChart = createAreaChart(warehouseId);
-
+            
+            filterByWarehouse.getChildren().addAll(filter, choiceBox);
+            
+            LineChart<String, Number> salesChart1 = createSalesChart();
+            currentAreaChart = createAreaChart(1);
+            // PieChart salesChart4 = createPieChart();
+            
+            // kolom, baris, span kolom, span baris
+            dashboard.add(filterByWarehouse, 0, 0);
+            dashboard.add(salesChart1, 0, 1);
             dashboard.add(currentAreaChart, 0, 2);
-        });
+            // dashboard.add(salesChart3, 0, 2);
+            // dashboard.add(salesChart4, 1, 2);
 
-        ColumnConstraints column1 = new ColumnConstraints();
-        column1.setPercentWidth(100);
-        dashboard.getColumnConstraints().addAll(column1);
+            choiceBox.setOnAction(e -> {
+                String selected = choiceBox.getValue();
+                int warehouseId = Integer.parseInt(selected.replace("Warehouse ", ""));
+                
+                dashboard.getChildren().remove(currentAreaChart);
 
-        RowConstraints filterRow = new RowConstraints();
-        filterRow.setPrefHeight(40);
-        RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(45);
-        RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(45);
-        dashboard.getRowConstraints().addAll(filterRow ,row1, row2);
-        
-        return dashboard;
+                currentAreaChart = createAreaChart(warehouseId);
+
+                dashboard.add(currentAreaChart, 0, 2);
+            });
+
+            ColumnConstraints column1 = new ColumnConstraints();
+            column1.setPercentWidth(100);
+            dashboard.getColumnConstraints().addAll(column1);
+
+            RowConstraints filterRow = new RowConstraints();
+            filterRow.setPrefHeight(40);
+            RowConstraints row1 = new RowConstraints();
+            row1.setPercentHeight(45);
+            RowConstraints row2 = new RowConstraints();
+            row2.setPercentHeight(45);
+            dashboard.getRowConstraints().addAll(filterRow ,row1, row2);
+            
+            return dashboard;
+        } else {
+            GridPane dashboard = new GridPane();
+            dashboard.setPadding(new Insets(20));
+            dashboard.setHgap(10);
+            dashboard.setVgap(10);
+            HBox displayContainer = new HBox(20);
+            displayContainer.setAlignment(Pos.CENTER);
+            Label noData = new Label("There are no data available to display.");
+            noData.setFont(loadFont("Title"));
+            displayContainer.getChildren().add(noData);
+            dashboard.add(displayContainer, 0, 1);
+            dashboard.setAlignment(Pos.CENTER);
+            return dashboard;
+        }
     }
 
     private AreaChart<String, Number> createAreaChart(int warehouseId){
@@ -235,7 +248,7 @@ public class OwnerDashboard implements BaseView {
 
         // Instansiasi titik (series)
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Total Sales");
+        series.setName("Total Sales of Warehouse " + warehouseId);
 
         List<Penjualan> penjualans = penjualanController.getSpesifiedWhPenjualan(warehouseId);
 

@@ -96,6 +96,7 @@ public class Penjualan {
             }
         } catch (SQLException e) {
             logger.info("Error retrieving recipes : " + e.getMessage());
+            return null;
         }
 
         return penjualanList;
@@ -124,6 +125,7 @@ public class Penjualan {
             }
         } catch (SQLException e) {
             logger.info("Error retrieving recipes : " + e.getMessage());
+            return null;
         }
 
         return penjualanList;
