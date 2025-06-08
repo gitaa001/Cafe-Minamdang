@@ -1,6 +1,4 @@
-package com.cafeminamdang.database;
-
-import java.sql.SQLException;
+package com.cafeminamdang.Database;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,8 +6,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 public class DatabaseInitiator {
     public static final Logger logger = Logger.getLogger(DatabaseInitiator.class.getName()); 
