@@ -109,7 +109,7 @@ public class Penjualan {
         try (PreparedStatement ptsmt = conn.prepareStatement(sql)) {
 
             ptsmt.setInt(1, gudangID);
-            ResultSet rs = ptsmt.executeQuery(sql);
+            ResultSet rs = ptsmt.executeQuery();
             // int i = 1;
 
             while (rs.next()) {

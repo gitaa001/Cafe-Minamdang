@@ -29,6 +29,7 @@ public class OwnerDashboard implements BaseView {
     private PenjualanController penjualanController;
     private BorderPane mainPane;
     private VBox centerView;
+    private AreaChart<String, Number> currentAreaChart;
 
     public OwnerDashboard(){
         penjualanController = new PenjualanController();
@@ -163,61 +164,64 @@ public class OwnerDashboard implements BaseView {
         dashboard.setHgap(10);
         dashboard.setVgap(10);
 
-        LineChart<String, Number> salesChart1 = createSalesChart();
-        AreaChart<String, Number> salesChart2 = createAreaChart();
-        BarChart<String, Number> salesChart3 = createBarChart();
-        PieChart salesChart4 = createPieChart();
+        HBox filterByWarehouse = new HBox(20);
+        filterByWarehouse.setAlignment(Pos.CENTER_LEFT);
+        
+        Label filter = new Label("Select Warehouse");
+        filter.setFont(loadFont("Thin-SemiBold"));
+        
+        List<Integer> uniqueWh = new ArrayList<>();
+        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+        ChoiceBox<String> choiceBox = new ChoiceBox<>();
+        for (Penjualan penjualan : penjualans){
+            int warehouseId = penjualan.getIdGudang();
+            if(!uniqueWh.contains(warehouseId)){
+                uniqueWh.add(warehouseId);
+                choiceBox.getItems().add("Warehouse " + warehouseId);
+            }
+        }
 
-        dashboard.add(salesChart1, 0, 0);
-        dashboard.add(salesChart2, 1, 0);
-        dashboard.add(salesChart3, 0, 1);
-        dashboard.add(salesChart4, 1, 1);
+        
+        filterByWarehouse.getChildren().addAll(filter, choiceBox);
+        
+        LineChart<String, Number> salesChart1 = createSalesChart();
+        currentAreaChart = createAreaChart(1);
+        // PieChart salesChart4 = createPieChart();
+        
+        // kolom, baris, span kolom, span baris
+        dashboard.add(filterByWarehouse, 0, 0);
+        dashboard.add(salesChart1, 0, 1);
+        dashboard.add(currentAreaChart, 0, 2);
+        // dashboard.add(salesChart3, 0, 2);
+        // dashboard.add(salesChart4, 1, 2);
+
+        choiceBox.setOnAction(e -> {
+            String selected = choiceBox.getValue();
+            int warehouseId = Integer.parseInt(selected.replace("Warehouse ", ""));
+            
+            dashboard.getChildren().remove(currentAreaChart);
+
+            currentAreaChart = createAreaChart(warehouseId);
+
+            dashboard.add(currentAreaChart, 0, 2);
+        });
 
         ColumnConstraints column1 = new ColumnConstraints();
-        column1.setPercentWidth(50);
-        ColumnConstraints column2 = new ColumnConstraints();
-        column2.setPercentWidth(50);
-        dashboard.getColumnConstraints().addAll(column1, column2);
+        column1.setPercentWidth(100);
+        dashboard.getColumnConstraints().addAll(column1);
 
+        RowConstraints filterRow = new RowConstraints();
+        filterRow.setPrefHeight(40);
         RowConstraints row1 = new RowConstraints();
-        row1.setPercentHeight(50);
+        row1.setPercentHeight(45);
         RowConstraints row2 = new RowConstraints();
-        row2.setPercentHeight(50);
-        dashboard.getRowConstraints().addAll(row1, row2);
+        row2.setPercentHeight(45);
+        dashboard.getRowConstraints().addAll(filterRow ,row1, row2);
         
         return dashboard;
     }
 
-    private BarChart<String, Number> createBarChart(){
-        CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Date");
-
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Total Sales (Rp)");
-
-        BarChart<String, Number> salesChart = new BarChart<>(xAxis, yAxis);
-        salesChart.setTitle("SalesData");
-
-        // Instansiasi titik (series)
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Total Sales");
-
-        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
-
-        // plotting titik-titik dari data yang ada
-        for (Penjualan penjualan : penjualans){
-            String date = penjualan.getTanggalPenjualan().toString();
-            int totalSales = penjualan.getTotalPenjualan();
-            series.getData().add(new XYChart.Data<>(date, totalSales));
-        }
-
-        // Memasukkan data ke lineChart
-        salesChart.getData().add(series);
-
-        return salesChart;
-    }
-
-    private AreaChart<String, Number> createAreaChart(){
+    private AreaChart<String, Number> createAreaChart(int warehouseId){
         CategoryAxis xAxis = new CategoryAxis();
         xAxis.setLabel("Date");
 
@@ -225,21 +229,28 @@ public class OwnerDashboard implements BaseView {
         yAxis.setLabel("Total Sales (Rp)");
 
         AreaChart<String, Number> salesChart = new AreaChart<>(xAxis, yAxis);
-        salesChart.setTitle("SalesData");
+        salesChart.setTitle("Warehouse " + warehouseId + " Sales");
+
+        salesChart.setCreateSymbols(true);
 
         // Instansiasi titik (series)
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Total Sales");
 
-        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+        List<Penjualan> penjualans = penjualanController.getSpesifiedWhPenjualan(warehouseId);
+
+        java.util.SortedMap<String, Integer> salesByDate = new java.util.TreeMap<>();
 
         // plotting titik-titik dari data yang ada
         for (Penjualan penjualan : penjualans){
             String date = penjualan.getTanggalPenjualan().toString();
-            int totalSales = penjualan.getTotalPenjualan();
-            series.getData().add(new XYChart.Data<>(date, totalSales));
+            int currentSales = salesByDate.getOrDefault(date, 0);
+            salesByDate.put(date, currentSales + penjualan.getTotalPenjualan());
         }
 
+        for (java.util.SortedMap.Entry<String, Integer> entry : salesByDate.entrySet()){
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
         // Memasukkan data ke lineChart
         salesChart.getData().add(series);
 
@@ -254,7 +265,7 @@ public class OwnerDashboard implements BaseView {
         yAxis.setLabel("Total Sales (Rp)");
 
         LineChart<String, Number> salesChart = new LineChart<>(xAxis, yAxis);
-        salesChart.setTitle("SalesData");
+        salesChart.setTitle("Total SalesData");
 
         // Instansiasi titik (series)
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -279,25 +290,25 @@ public class OwnerDashboard implements BaseView {
         return salesChart;
     }
 
-    private PieChart createPieChart(){
-        PieChart salesChart = new PieChart();
-        salesChart.setTitle("SalesData");
+    // private PieChart createPieChart(){
+    //     PieChart salesChart = new PieChart();
+    //     salesChart.setTitle("SalesData");
 
-        // Instansiasi titik (series)
-        XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Total Sales");
+    //     // Instansiasi titik (series)
+    //     XYChart.Series<String, Number> series = new XYChart.Series<>();
+    //     series.setName("Total Sales");
 
-        List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+    //     List<Penjualan> penjualans = penjualanController.getAllPenjualan();
 
-        // plotting titik-titik dari data yang ada
-        for (Penjualan penjualan : penjualans){
-            String date = penjualan.getTanggalPenjualan().toString();
-            int totalSales = penjualan.getTotalPenjualan();
-            salesChart.getData().add(new PieChart.Data(date, totalSales));
-        }
+    //     // plotting titik-titik dari data yang ada
+    //     for (Penjualan penjualan : penjualans){
+    //         String date = penjualan.getTanggalPenjualan().toString();
+    //         int totalSales = penjualan.getTotalPenjualan();
+    //         salesChart.getData().add(new PieChart.Data(date, totalSales));
+    //     }
 
-        return salesChart;
-    }
+    //     return salesChart;
+    // }
 
     private Button createIconButton(String svgPath, double size, Color iconColor, String btnColor, String hoverColor, String text){
         SVGPath path = new SVGPath();
