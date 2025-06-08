@@ -1,4 +1,4 @@
-package com.cafeminamdang.database;
+package com.cafeminamdang.Database;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
     public static final Logger logger = Logger.getLogger(DatabaseManager.class.getName()); 

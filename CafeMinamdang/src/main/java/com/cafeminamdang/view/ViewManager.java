@@ -1,12 +1,12 @@
 package com.cafeminamdang.view;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.application.Platform;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ViewManager {
     private Role role = null;
