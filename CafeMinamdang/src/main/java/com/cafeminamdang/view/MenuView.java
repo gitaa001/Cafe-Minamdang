@@ -109,7 +109,7 @@ public class MenuView implements BaseView {
             switch (selected) {
                 case "Business Owner":
                     viewManager.setRole(Role.BUSINESS_OWNER);
-                    viewManager.switchView("business owner dashboard");
+                    viewManager.switchView("owner dashboard");
                     break;
                 case "Branch Manager":
                 viewManager.setRole(Role.BRANCH_MANAGER);
