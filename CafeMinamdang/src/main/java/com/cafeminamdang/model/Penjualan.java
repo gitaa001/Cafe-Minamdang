@@ -3,7 +3,7 @@ package com.cafeminamdang.model;
 import com.cafeminamdang.database.DatabaseManager;
 
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -82,6 +82,34 @@ public class Penjualan {
 
         try (Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)) {
+            // int i = 1;
+
+            while (rs.next()) {
+                Penjualan penjualan = new Penjualan();
+                penjualan.setIdPenjualan(rs.getInt("IDPenjualan"));
+                penjualan.setTotalPenjualan(rs.getInt("TotalHarga"));
+                penjualan.setTanggalPenjualan(rs.getString("Tanggal"));
+                penjualan.setIdGudang(rs.getInt("IDGudang"));
+                
+                penjualanList.add(penjualan);
+                // System.out.println((i++) + resep.toString());
+            }
+        } catch (SQLException e) {
+            logger.info("Error retrieving recipes : " + e.getMessage());
+        }
+
+        return penjualanList;
+    }
+
+    public static List<Penjualan> getAllPenjualanFromSpesificWh(int gudangID){
+        List<Penjualan> penjualanList = new ArrayList<>();
+        String sql = "SELECT * FROM Penjualan WHERE IDGudang = ? ORDER BY IDPenjualan";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (PreparedStatement ptsmt = conn.prepareStatement(sql)) {
+
+            ptsmt.setInt(1, gudangID);
+            ResultSet rs = ptsmt.executeQuery(sql);
             // int i = 1;
 
             while (rs.next()) {

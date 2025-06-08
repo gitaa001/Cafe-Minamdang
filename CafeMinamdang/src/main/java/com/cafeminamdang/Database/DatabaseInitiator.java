@@ -180,6 +180,32 @@ public class DatabaseInitiator {
                     "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
                     "VALUES (350000, '2025-06-05', 2)"
                 );
+                                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (285000, '2025-06-06', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (310000, '2025-06-06', 2)"
+                );
+                
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (420000, '2025-06-07', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (380000, '2025-06-07', 2)"
+                );
+                
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (275000, '2025-06-08', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (225000, '2025-06-08', 2)"
+                );
                 logger.info("Sample Penjualan data added");
                 
                 stmt.execute(

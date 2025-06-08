@@ -56,14 +56,6 @@ public class OwnerDashboard implements BaseView {
         createDashboardView();
     }
 
-    private VBox createCenterView(){
-        VBox container = new VBox(20);
-        container.setPadding(new Insets(20));
-        container.setStyle("-fx-background-color: #F5F5F5;"); 
-        // … populate or leave blank as placeholder …
-        return container;
-    }
-
     private HBox createHeader(){
         HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
@@ -114,26 +106,26 @@ public class OwnerDashboard implements BaseView {
         return path;
     }
 
-    private void showAlert(String title, String message){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(title);
-        alert.setContentText(message);
+    // private void showAlert(String title, String message){
+    //     Alert alert = new Alert(Alert.AlertType.ERROR);
+    //     alert.setTitle(title);
+    //     alert.setHeaderText(title);
+    //     alert.setContentText(message);
         
-        DialogPane dialogPane = alert.getDialogPane();
+    //     DialogPane dialogPane = alert.getDialogPane();
 
-        Label headerLabel = (Label) dialogPane.lookup(".header-panel .label");
-        if (headerLabel != null) {
-            headerLabel.setFont(loadFont("Thin-SemiBold"));
-            headerLabel.setTextFill(Color.WHITE);
-        }   
+    //     Label headerLabel = (Label) dialogPane.lookup(".header-panel .label");
+    //     if (headerLabel != null) {
+    //         headerLabel.setFont(loadFont("Thin-SemiBold"));
+    //         headerLabel.setTextFill(Color.WHITE);
+    //     }   
             
-        Label contentLabel = (Label) dialogPane.lookup(".content.label");
-        if (contentLabel != null) {
-            contentLabel.setFont(loadFont("Thin-SemiBold"));
-        }
-        alert.showAndWait();
-    }
+    //     Label contentLabel = (Label) dialogPane.lookup(".content.label");
+    //     if (contentLabel != null) {
+    //         contentLabel.setFont(loadFont("Thin-SemiBold"));
+    //     }
+    //     alert.showAndWait();
+    // }
 
     private Font loadFont(String Type) {
         String basePath = "/fonts/";
@@ -266,17 +258,21 @@ public class OwnerDashboard implements BaseView {
 
         // Instansiasi titik (series)
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Total Sales");
+        series.setName("Total Sales of All Warehouse");
 
         List<Penjualan> penjualans = penjualanController.getAllPenjualan();
+        java.util.SortedMap<String, Integer> salesByDate = new java.util.TreeMap<>();
 
         // plotting titik-titik dari data yang ada
         for (Penjualan penjualan : penjualans){
             String date = penjualan.getTanggalPenjualan().toString();
-            int totalSales = penjualan.getTotalPenjualan();
-            series.getData().add(new XYChart.Data<>(date, totalSales));
+            int currentSales = salesByDate.getOrDefault(date, 0);
+            salesByDate.put(date, currentSales + penjualan.getTotalPenjualan());
         }
 
+        for (java.util.SortedMap.Entry<String, Integer> entry : salesByDate.entrySet()){
+            series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+        }
         // Memasukkan data ke lineChart
         salesChart.getData().add(series);
 
