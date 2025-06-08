@@ -1,4 +1,4 @@
-package com.cafeminamdang.Database;
+package com.cafeminamdang.database;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
     public static final Logger logger = Logger.getLogger(DatabaseManager.class.getName()); 
@@ -40,17 +40,9 @@ public class DatabaseManager {
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute("PRAGMA foreign_keys = ON"); // Setup biar foreign key always on
                 }
-                try {
-                    // Method 1: Standard connection
-                    System.out.println("\n=== METHOD 1: Standard Connection ===");
-                    try (Connection conn = DriverManager.getConnection(url)) {
-                        System.out.println("Standard connection established");
-                        checkTables(conn, "Standard");
-                    }
-                } catch (SQLException e){
-                    System.out.println("SQL Error: " + e.getMessage());
-                    e.printStackTrace();
-                }   
+                // Method 1: Standard connection
+                System.out.println("\n=== METHOD 1: Standard Connection ===");
+                checkTables(connection, "Standard");
             } catch (SQLException e) {
                 logger.info("Could not initialize database connection: " + e.getMessage());
             } catch (URISyntaxException e) {

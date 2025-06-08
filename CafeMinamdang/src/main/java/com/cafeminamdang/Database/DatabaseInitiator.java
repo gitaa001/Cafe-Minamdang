@@ -1,6 +1,4 @@
-package com.cafeminamdang.Database;
-
-import java.sql.SQLException;
+package com.cafeminamdang.database;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,8 +6,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
 public class DatabaseInitiator {
     public static final Logger logger = Logger.getLogger(DatabaseInitiator.class.getName()); 
@@ -148,6 +147,65 @@ public class DatabaseInitiator {
                     "VALUES (5, 'Pembelian Kopi Excelsa', '2025-06-02', 1, 40000, 50)"
                 );
                 logger.info("Sample Invoice data added");
+
+                stmt.execute(
+                    "CREATE TABLE IF NOT EXISTS Penjualan (" +
+                    "IDPenjualan INTEGER PRIMARY KEY AUTOINCREMENT," + 
+                    "TotalHarga INTEGER NOT NULL," +
+                    "Tanggal DATE NOT NULL," +
+                    "IDGudang INTEGER NOT NULL," +
+                    "FOREIGN KEY(IDGudang) REFERENCES Gudang(IDGudang)" +
+                    ")"
+                );
+                logger.info("Penjualan table created");
+
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (300000, '2025-06-01', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (450000, '2025-06-02', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (200000, '2025-06-03', 2)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (500000, '2025-06-04', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (350000, '2025-06-05', 2)"
+                );
+                                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (285000, '2025-06-06', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (310000, '2025-06-06', 2)"
+                );
+                
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (420000, '2025-06-07', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (380000, '2025-06-07', 2)"
+                );
+                
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (275000, '2025-06-08', 1)"
+                );
+                stmt.execute(
+                    "INSERT OR IGNORE INTO Penjualan (TotalHarga, Tanggal, IDGudang) " +
+                    "VALUES (225000, '2025-06-08', 2)"
+                );
+                logger.info("Sample Penjualan data added");
                 
                 stmt.execute(
                     "CREATE TABLE IF NOT EXISTS Resep (" +
