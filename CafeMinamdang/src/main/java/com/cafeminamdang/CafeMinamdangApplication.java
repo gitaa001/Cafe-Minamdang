@@ -21,10 +21,8 @@ public class CafeMinamdangApplication extends Application {
         viewManager.setPrimaryStage(primaryStage);
         
         BarangView barangView = new BarangView();
-        viewManager.registerView("barang", barangView.getRoot());
+        viewManager.registerView("branch manager dashboard", barangView.getRoot());
         
-        viewManager.initializeView("barang");
-
         MenuView menuView = new MenuView();
         viewManager.registerView("menu", menuView.getRoot());
         
@@ -35,7 +33,6 @@ public class CafeMinamdangApplication extends Application {
         viewManager.registerView("owner dashboard", ownerDashboard.getRoot());
         
         viewManager.initializeView("menu");
-
         
         primaryStage.show();
     }
