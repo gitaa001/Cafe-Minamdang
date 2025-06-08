@@ -74,7 +74,6 @@
                     <mainClass>com.cafeminamdang.CafeMinamdangApplication</mainClass>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 </project>
