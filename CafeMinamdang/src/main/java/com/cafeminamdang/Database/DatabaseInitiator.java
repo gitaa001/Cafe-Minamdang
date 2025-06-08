@@ -1,4 +1,4 @@
-package com.cafeminamdang.Database;
+package com.cafeminamdang.database;
 
 import java.io.File;
 import java.io.FileOutputStream;

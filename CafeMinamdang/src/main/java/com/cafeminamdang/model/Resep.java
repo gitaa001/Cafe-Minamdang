@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.cafeminamdang.Database.DatabaseManager;
+import com.cafeminamdang.database.DatabaseManager;
 
 public class Resep {
     private static final Logger logger = Logger.getLogger(Resep.class.getName());
