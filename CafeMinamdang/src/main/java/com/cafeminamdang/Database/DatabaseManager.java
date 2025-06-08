@@ -19,7 +19,6 @@ public class DatabaseManager {
         if (DEVELOPMENT_MODE){
             try {
                 DatabaseInitiator.tes();
-
                 var dburl = DatabaseManager.class.getClassLoader().getResource("CafeMinamdang.db");
                 System.out.println("Database URL: " + dburl);
                 

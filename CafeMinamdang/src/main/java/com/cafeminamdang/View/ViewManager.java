@@ -1,4 +1,4 @@
-package com.cafeminamdang.view;
+package com.cafeminamdang.View;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;

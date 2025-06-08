@@ -1,5 +1,6 @@
 package com.cafeminamdang;
 
+import com.cafeminamdang.view.BarangView;
 import com.cafeminamdang.view.MenuView;
 import com.cafeminamdang.view.OwnerDashboard;
 import com.cafeminamdang.view.ResepView;
@@ -18,6 +19,11 @@ public class CafeMinamdangApplication extends Application {
         
         ViewManager viewManager = ViewManager.getInstance();
         viewManager.setPrimaryStage(primaryStage);
+        
+        BarangView barangView = new BarangView();
+        viewManager.registerView("barang", barangView.getRoot());
+        
+        viewManager.initializeView("barang");
 
         MenuView menuView = new MenuView();
         viewManager.registerView("menu", menuView.getRoot());
