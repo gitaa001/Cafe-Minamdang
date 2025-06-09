@@ -204,6 +204,7 @@ public class OwnerDashboard implements BaseView {
                 int warehouseId = Integer.parseInt(selected.replace("Warehouse ", ""));
                 
                 dashboard.getChildren().remove(currentAreaChart);
+                dashboard.getChildren().removeIf(node -> node instanceof AreaChart);
 
                 currentAreaChart = createAreaChart(warehouseId);
 
