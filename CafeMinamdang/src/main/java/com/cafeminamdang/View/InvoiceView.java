@@ -175,8 +175,8 @@ public class InvoiceView implements BaseView {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         // Table columns for invoices
-        TableColumn<Invoice, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(cellData -> cellData.getValue().idInvoiceProperty());
+        TableColumn<Invoice, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(cellData -> cellData.getValue().idInvoiceProperty().asObject());
         idColumn.setPrefWidth(60);
         
         TableColumn<Invoice, String> titleColumn = new TableColumn<>("Invoice Title");
@@ -234,8 +234,8 @@ public class InvoiceView implements BaseView {
         });
         priceColumn.setPrefWidth(120);
         
-        TableColumn<Invoice, String> warehouseColumn = new TableColumn<>("Warehouse ID");
-        warehouseColumn.setCellValueFactory(cellData -> cellData.getValue().idGudangProperty());
+        TableColumn<Invoice, Integer> warehouseColumn = new TableColumn<>("Warehouse ID");
+        warehouseColumn.setCellValueFactory(cellData -> cellData.getValue().idGudangProperty().asObject());
         warehouseColumn.setPrefWidth(100);
 
         TableColumn<Invoice, Void> actionsColumn = new TableColumn<>("Actions");
@@ -491,9 +491,15 @@ public class InvoiceView implements BaseView {
                     return;
                 }
                 
-                String warehouseId = warehouseField.getText().trim();
-                if (warehouseId.isEmpty()) {
-                    showAlert("Error", "Please enter a warehouse ID");
+                int warehouseId;
+                try {
+                    warehouseId = Integer.parseInt(warehouseField.getText().trim());
+                    if (warehouseId <= 0) {
+                        showAlert("Error", "Warehouse ID must be greater than zero");
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    showAlert("Error", "Please enter a valid warehouse ID");
                     return;
                 }
                 
@@ -585,7 +591,7 @@ public class InvoiceView implements BaseView {
         
         Label idLabel = new Label("Invoice ID:");
         idLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        Label idValue = new Label(invoice.getIDInvoice());
+        Label idValue = new Label(invoice.getIDInvoice().toString());
         
         Label dateLabel = new Label("Date:");
         dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -605,7 +611,7 @@ public class InvoiceView implements BaseView {
         
         Label warehouseLabel = new Label("Warehouse ID:");
         warehouseLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        Label warehouseValue = new Label(invoice.getIDGudang());
+        Label warehouseValue = new Label(invoice.getIDGudang().toString());
         
         infoGrid.add(idLabel, 0, 0);
         infoGrid.add(idValue, 1, 0);

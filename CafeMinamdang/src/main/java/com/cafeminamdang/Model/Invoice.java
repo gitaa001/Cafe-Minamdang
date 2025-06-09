@@ -35,28 +35,28 @@ public class Invoice {
     private ObjectProperty<Barang> barang;
     private IntegerProperty hargaTotal;
     private IntegerProperty kuantitas;
-    private StringProperty idGudang;
-    private StringProperty idInvoice;
+    private IntegerProperty idGudang;
+    private IntegerProperty idInvoice;
 
     // Constructor
-    public Invoice(String judulInvoice, Date tanggal, Barang barang, Integer hargaTotal, Integer kuantitas, String idGudang) {
+    public Invoice(String judulInvoice, Date tanggal, Barang barang, int hargaTotal, int kuantitas, int idGudang) {
         this.judulInvoice = new SimpleStringProperty(judulInvoice);
         this.tanggal = new SimpleObjectProperty<>(tanggal);
         this.barang = new SimpleObjectProperty<>(barang);
         this.hargaTotal = new SimpleIntegerProperty(hargaTotal);
         this.kuantitas = new SimpleIntegerProperty(kuantitas);
-        this.idGudang = new SimpleStringProperty(idGudang);
+        this.idGudang = new SimpleIntegerProperty(idGudang);
     }
 
     // Constructor with ID (buat database)
-    public Invoice(String idInvoice, String judulInvoice, Date tanggal, Barang barang, Integer hargaTotal, Integer kuantitas, String idGudang) {
-        this.idInvoice = new SimpleStringProperty(idInvoice);
+    public Invoice(Integer idInvoice, String judulInvoice, Date tanggal, Barang barang, Integer hargaTotal, Integer kuantitas, Integer idGudang) {
+        this.idInvoice = new SimpleIntegerProperty(idInvoice);
         this.judulInvoice = new SimpleStringProperty(judulInvoice);
         this.tanggal = new SimpleObjectProperty<>(tanggal);
         this.barang = new SimpleObjectProperty<>(barang);
         this.hargaTotal = new SimpleIntegerProperty(hargaTotal);
         this.kuantitas = new SimpleIntegerProperty(kuantitas);
-        this.idGudang = new SimpleStringProperty(idGudang);
+        this.idGudang = new SimpleIntegerProperty(idGudang);
     }
 
     // Default constructor
@@ -66,8 +66,8 @@ public class Invoice {
         this.barang = new SimpleObjectProperty<>();
         this.hargaTotal = new SimpleIntegerProperty();
         this.kuantitas = new SimpleIntegerProperty();
-        this.idGudang = new SimpleStringProperty();
-        this.idInvoice = new SimpleStringProperty();
+        this.idGudang = new SimpleIntegerProperty();
+        this.idInvoice = new SimpleIntegerProperty();
     }
 
     public StringProperty judulInvoiceProperty() {
@@ -90,11 +90,11 @@ public class Invoice {
         return kuantitas;
     }
 
-    public StringProperty idGudangProperty() {
+    public IntegerProperty idGudangProperty() {
         return idGudang;
     }
 
-    public StringProperty idInvoiceProperty() {
+    public IntegerProperty idInvoiceProperty() {
         return idInvoice;
     }
 
@@ -118,11 +118,11 @@ public class Invoice {
         return kuantitas.get();
     }
 
-    public String getIDGudang() {
+    public Integer getIDGudang() {
         return idGudang.get();
     }
 
-    public String getIDInvoice() {
+    public Integer getIDInvoice() {
         return idInvoice.get();
     }
 
@@ -146,11 +146,11 @@ public class Invoice {
         this.kuantitas.set(kuantitas);
     }
 
-    public void setIDGudang(String idGudang) {
+    public void setIDGudang(Integer idGudang) {
         this.idGudang.set(idGudang);
     }
 
-    public void setIDInvoice(String idInvoice) {
+    public void setIDInvoice(Integer idInvoice) {
         this.idInvoice.set(idInvoice);
     }
 
@@ -166,10 +166,10 @@ public class Invoice {
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, invoice.getJudulInvoice());
                 pstmt.setTimestamp(2, new Timestamp(invoice.getTanggalInvoice().getTime()));
-                pstmt.setString(3, invoice.getBarangInvoice().getIDBarang());
+                pstmt.setInt(3, invoice.getBarangInvoice().getIDBarang());
                 pstmt.setInt(4, invoice.getHargaTotalInvoice());
                 pstmt.setInt(5, invoice.getKuantitasInvoice());
-                pstmt.setString(6, invoice.getIDGudang());
+                pstmt.setInt(6, invoice.getIDGudang());
                 pstmt.executeUpdate();
                 logger.info("Invoice added successfully.");
             }
@@ -178,33 +178,33 @@ public class Invoice {
         }
     }
 
-    public static Invoice getInvoiceById(String IDInvoice) {
+    public static Invoice getInvoiceById(Integer IDInvoice) {
         String sql = "SELECT i.*, b.* FROM Invoice i JOIN Barang b ON i.IDBarang = b.IDBarang WHERE i.IDInvoice = ?";
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, IDInvoice);
+            pstmt.setInt(1, IDInvoice);
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     // Create Barang object from result set
                     Barang barang = new Barang(
-                        rs.getString("IDBarang"),
+                        rs.getInt("IDBarang"),
                         rs.getString("NamaBarang"),
                         rs.getString("Deskripsi"),
                         rs.getInt("Kuantitas"),
                         rs.getBoolean("IsKonsinyasi"),
-                        rs.getString("IDGudang")
+                        rs.getInt("IDGudang")
                     );
                     
                     // Create and return Invoice object
                     Invoice invoice = new Invoice();
-                    invoice.setIDInvoice(rs.getString("IDInvoice"));
+                    invoice.setIDInvoice(rs.getInt("IDInvoice"));
                     invoice.setJudulInvoice(rs.getString("JudulInvoice"));
                     invoice.setTanggalInvoice(new Date(rs.getTimestamp("Tanggal").getTime()));
                     invoice.setBarangInvoice(barang);
                     invoice.setHargaTotalInvoice(rs.getInt("HargaTotal"));
                     invoice.setKuantitasInvoice(rs.getInt("Kuantitas"));
-                    invoice.setIDGudang(rs.getString("IDGudang"));
+                    invoice.setIDGudang(rs.getInt("IDGudang"));
                     
                     return invoice;
                 }
@@ -215,11 +215,11 @@ public class Invoice {
         return null;
     }
 
-    public static boolean deleteInvoiceById(String IDInvoice) {
+    public static boolean deleteInvoiceById(Integer IDInvoice) {
         String sql = "DELETE FROM Invoice WHERE IDInvoice = ?";
         try (Connection conn = DatabaseManager.getInstance().getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, IDInvoice);
+            pstmt.setInt(1, IDInvoice);
             int rowsAffected = pstmt.executeUpdate();
             logger.info("Invoice deleted successfully. Rows affected: " + rowsAffected);
             return rowsAffected > 0;
@@ -240,22 +240,22 @@ public class Invoice {
             
             while (rs.next()) {
                 Barang barang = new Barang(
-                    rs.getString("IDBarang"),
+                    rs.getInt("IDBarang"),
                     rs.getString("NamaBarang"),
                     rs.getString("Deskripsi"),
                     rs.getInt("Kuantitas"),
                     rs.getBoolean("IsKonsinyasi"),
-                    rs.getString("IDGudang")
+                    rs.getInt("IDGudang")
                 );
                 
                 Invoice invoice = new Invoice();
-                invoice.setIDInvoice(rs.getString("IDInvoice"));
+                invoice.setIDInvoice(rs.getInt("IDInvoice"));
                 invoice.setJudulInvoice(rs.getString("JudulInvoice"));
                 invoice.setTanggalInvoice(new Date(rs.getTimestamp("Tanggal").getTime()));
                 invoice.setBarangInvoice(barang);
                 invoice.setHargaTotalInvoice(rs.getInt("HargaTotal"));
                 invoice.setKuantitasInvoice(rs.getInt("Kuantitas"));
-                invoice.setIDGudang(rs.getString("IDGudang"));
+                invoice.setIDGudang(rs.getInt("IDGudang"));
                 
                 list.add(invoice);
             }
@@ -319,7 +319,7 @@ public class Invoice {
                 case 2:
                     // Cari invoice berdasarkan ID
                     System.out.print("Masukkan ID Invoice: ");
-                    String idInvoice = scanner.nextLine();
+                    int idInvoice = Integer.parseInt(scanner.nextLine());
                     
                     Invoice found = Invoice.getInvoiceById(idInvoice);
                     if (found != null) {
@@ -343,41 +343,44 @@ public class Invoice {
                         System.out.println("Masukkan data invoice baru:");
                         System.out.print("Judul Invoice: ");
                         String judulInvoice = scanner.nextLine();
-                        
+        
                         System.out.print("Tanggal (yyyy-MM-dd): ");
                         String dateString = scanner.nextLine();
                         Date tanggal = dateFormat.parse(dateString);
-                        
+        
                         System.out.print("ID Barang: ");
-                        String idBarang = scanner.nextLine();
-                        
+                        int idBarang = Integer.parseInt(scanner.nextLine());
+        
                         // Fetch Barang object
                         Barang barang = Barang.getBarangByID(idBarang);
-                        
+        
                         if (barang == null) {
                             System.out.println("Barang tidak ditemukan.");
                             break;
                         }
-                        
+        
                         System.out.print("Kuantitas: ");
                         int kuantitas = scanner.nextInt();
                         scanner.nextLine();
-                        
+        
                         System.out.print("Harga Total: ");
                         int hargaTotal = scanner.nextInt();
                         scanner.nextLine();
-                        
+        
                         System.out.print("ID Gudang: ");
-                        String idGudang = scanner.nextLine();
-                        
+                        int idGudang = Integer.parseInt(scanner.nextLine());
+        
                         // Create and add Invoice
                         Invoice newInvoice = new Invoice(judulInvoice, tanggal, barang, hargaTotal, kuantitas, idGudang);
                         newInvoice.addInvoice(newInvoice);
-                        
+        
                         System.out.println("Invoice berhasil ditambahkan.");
                     } catch (ParseException e) {
                         System.out.println("Format tanggal salah: " + e.getMessage());
                         logger.severe("Error parsing date: " + e.getMessage());
+                    } catch (NumberFormatException e) {
+                        System.out.println("Format angka salah: " + e.getMessage());
+                        logger.severe("Error parsing number: " + e.getMessage());
                     } catch (Exception e) {
                         System.out.println("Error: " + e.getMessage());
                         logger.severe("Error adding invoice: " + e.getMessage());
@@ -387,7 +390,7 @@ public class Invoice {
                 case 4:
                     // Hapus invoice
                     System.out.print("Masukkan ID Invoice yang akan dihapus: ");
-                    String deleteId = scanner.nextLine();
+                    int deleteId = Integer.parseInt(scanner.nextLine());
                     
                     boolean deleted = Invoice.deleteInvoiceById(deleteId);
                     if (deleted) {

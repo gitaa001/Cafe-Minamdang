@@ -44,12 +44,31 @@ public class InvoiceController {
      * @param invoiceId
      * @return true if invoice is deleted, false otherwise
      */
-    public boolean deleteInvoice(String invoiceId) {
-        if (invoiceId == null || invoiceId.trim().isEmpty()) {
+    public boolean deleteInvoice(Integer invoiceId) {
+        if (invoiceId == null) {
             return false;
         }
 
         return Invoice.deleteInvoiceById(invoiceId);
+    }
+
+    /**
+     * Controller for deleting an invoice based on the string ID input
+     * Converts the string ID to Integer and calls the main delete method
+     * @param invoiceIdStr String representation of invoice ID
+     * @return true if invoice is deleted, false otherwise
+     */
+    public boolean deleteInvoice(String invoiceIdStr) {
+        if (invoiceIdStr == null || invoiceIdStr.trim().isEmpty()) {
+            return false;
+        }
+        
+        try {
+            Integer invoiceId = Integer.parseInt(invoiceIdStr);
+            return deleteInvoice(invoiceId);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     /**
@@ -63,8 +82,7 @@ public class InvoiceController {
      * @param idGudang warehouse ID
      * @return newly created Invoice object
      */
-    public Invoice createInvoice(String judulInvoice, Date tanggal, Barang barang, 
-                                 Integer hargaTotal, Integer kuantitas, String idGudang) {
+    public Invoice createInvoice(String judulInvoice, Date tanggal, Barang barang, Integer hargaTotal, Integer kuantitas, Integer idGudang) {
         return new Invoice(judulInvoice, tanggal, barang, hargaTotal, kuantitas, idGudang);
     }
 
@@ -73,11 +91,30 @@ public class InvoiceController {
      * @param invoiceId ID of the invoice to retrieve
      * @return Invoice object if found, null otherwise
      */
-    public Invoice getInvoiceById(String invoiceId) {
-        if (invoiceId == null || invoiceId.trim().isEmpty()) {
+    public Invoice getInvoiceById(Integer invoiceId) {
+        if (invoiceId == null) {
             return null;
         }
         return Invoice.getInvoiceById(invoiceId);
+    }
+    
+    /**
+     * Controller for getting an invoice by string ID
+     * Converts the string ID to Integer and calls the main get method
+     * @param invoiceIdStr String representation of invoice ID
+     * @return Invoice object if found, null otherwise
+     */
+    public Invoice getInvoiceById(String invoiceIdStr) {
+        if (invoiceIdStr == null || invoiceIdStr.trim().isEmpty()) {
+            return null;
+        }
+        
+        try {
+            Integer invoiceId = Integer.parseInt(invoiceIdStr);
+            return getInvoiceById(invoiceId);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
     
     /**
