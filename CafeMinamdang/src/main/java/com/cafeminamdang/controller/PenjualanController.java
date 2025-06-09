@@ -1,6 +1,6 @@
-package com.cafeminamdang.controller;
+package com.cafeminamdang.Controller;
 
-import com.cafeminamdang.model.Penjualan;
+import com.cafeminamdang.Model.Penjualan;
 
 import java.util.List;
 

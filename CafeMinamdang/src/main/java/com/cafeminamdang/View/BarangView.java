@@ -1,7 +1,7 @@
-package com.cafeminamdang.view;
+package com.cafeminamdang.View;
 
-import com.cafeminamdang.controller.BarangController;
-import com.cafeminamdang.model.Barang;
+import com.cafeminamdang.Controller.BarangController;
+import com.cafeminamdang.Model.Barang;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

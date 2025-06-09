@@ -1,10 +1,7 @@
 package com.cafeminamdang;
 
-import com.cafeminamdang.view.BarangView;
-import com.cafeminamdang.view.MenuView;
-import com.cafeminamdang.view.OwnerDashboard;
-import com.cafeminamdang.view.ResepView;
-import com.cafeminamdang.view.ViewManager;
+import com.cafeminamdang.View.MenuView;
+import com.cafeminamdang.View.ViewManager;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

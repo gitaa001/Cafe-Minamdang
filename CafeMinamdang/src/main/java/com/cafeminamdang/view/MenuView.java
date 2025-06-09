@@ -1,7 +1,7 @@
-package com.cafeminamdang.view;
+package com.cafeminamdang.View;
 
-import com.cafeminamdang.model.Penjualan;
-import com.cafeminamdang.controller.PenjualanController;
+import com.cafeminamdang.Model.Penjualan;
+import com.cafeminamdang.Controller.PenjualanController;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

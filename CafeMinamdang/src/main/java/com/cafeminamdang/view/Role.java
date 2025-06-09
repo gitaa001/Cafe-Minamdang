@@ -1,4 +1,4 @@
-package com.cafeminamdang.view;
+package com.cafeminamdang.View;
 
 public enum Role {
     BUSINESS_OWNER("Business Owner"),
