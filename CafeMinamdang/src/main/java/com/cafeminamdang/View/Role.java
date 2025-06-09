@@ -1,7 +1,18 @@
 package com.cafeminamdang.View;
 
 public enum Role {
-    PURCHASING,
-    OWNER,
-    BRANCH_MANAGER
+    BUSINESS_OWNER("Business Owner"),
+    BRANCH_MANAGER("Branch Manager"),
+    PURCHASING("Purchasing");
+
+    private final String displayName;
+
+    Role(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
+    public String toString() {
+        return displayName;
+    }
 }
