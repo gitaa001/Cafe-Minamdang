@@ -1,10 +1,11 @@
 package com.cafeminamdang.Driver;
 
-import com.cafeminamdang.Model.Invoice;
-
-import java.sql.Date;
 import java.math.BigDecimal;
 import java.util.Scanner;
+
+import com.cafeminamdang.Model.Invoice;
+
+import java.util.List;
 
 public class InvoiceDriver {
     public static void main(String[] args) {
@@ -16,25 +17,26 @@ public class InvoiceDriver {
             System.out.println("2. Cari invoice berdasarkan ID");
             System.out.println("3. Tambah invoice baru");
             System.out.println("4. Hapus invoice");
-            System.out.println("5. Lihat invoice berdasarkan nominal (naik)");
-            System.out.println("6. Lihat invoice berdasarkan tanggal (naik)");
+            System.out.println("5. Lihat invoice berdasarkan nominal (tertinggi ke terendah)");
+            System.out.println("6. Lihat invoice berdasarkan tanggal (terbaru ke terlama)");
             System.out.println("7. Keluar");
             System.out.print("Pilih opsi (1-7): ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // untuk menangkap newline setelah nextInt
+            scanner.nextLine(); // menangkap newline
 
             switch (choice) {
                 case 1:
                     System.out.println("Daftar Invoice:");
-                    for (Invoice invoice : Invoice.getAllInvoices()) {
+                    List<Invoice> allInvoices = Invoice.getAllInvoice();
+                    for (Invoice invoice : allInvoices) {
                         System.out.println(
-                            "ID: " + invoice.getIDInvoice() +
+                            "ID: " + invoice.getIdInvoice() +
                             ", Judul: " + invoice.getJudulInvoice() +
-                            ", Tanggal: " + (invoice.getTanggalInvoice() != null ? invoice.getTanggalInvoice().toString() : "null") +
+                            ", Tanggal: " + (invoice.getTanggal() != null ? invoice.getTanggal().toString() : "null") +
                             ", Unit Price: " + invoice.getUnitPrice() +
-                            ", Kuantitas: " + invoice.getKuantitasInvoice() +
-                            ", ID Gudang: " + invoice.getIDGudang()
+                            ", Kuantitas: " + invoice.getKuantitas() +
+                            ", ID Gudang: " + invoice.getIdGudang()
                         );
                     }
                     break;
@@ -46,12 +48,12 @@ public class InvoiceDriver {
                     Invoice found = Invoice.getInvoiceById(idInvoice);
                     if (found != null) {
                         System.out.println(
-                            "ID: " + found.getIDInvoice() +
+                            "ID: " + found.getIdInvoice() +
                             ", Judul: " + found.getJudulInvoice() +
-                            ", Tanggal: " + (found.getTanggalInvoice() != null ? found.getTanggalInvoice().toString() : "null") +
+                            ", Tanggal: " + (found.getTanggal() != null ? found.getTanggal().toString() : "null") +
                             ", Unit Price: " + found.getUnitPrice() +
-                            ", Kuantitas: " + found.getKuantitasInvoice() +
-                            ", ID Gudang: " + found.getIDGudang()
+                            ", Kuantitas: " + found.getKuantitas() +
+                            ", ID Gudang: " + found.getIdGudang()
                         );
                     } else {
                         System.out.println("Invoice tidak ditemukan.");
@@ -66,7 +68,7 @@ public class InvoiceDriver {
 
                         System.out.print("Tanggal (yyyy-MM-dd): ");
                         String dateString = scanner.nextLine();
-                        Date tanggal = Date.valueOf(dateString);
+                        String tanggal = String.valueOf(dateString);
 
                         System.out.print("Unit Price: ");
                         BigDecimal unitPrice = new BigDecimal(scanner.nextLine());
@@ -78,9 +80,11 @@ public class InvoiceDriver {
                         int idGudang = Integer.parseInt(scanner.nextLine());
 
                         Invoice newInvoice = new Invoice(judulInvoice, tanggal, idGudang, unitPrice, kuantitas);
-                        newInvoice.addInvoice(newInvoice);
-
-                        System.out.println("Invoice berhasil ditambahkan.");
+                        if (newInvoice.save()) {
+                            System.out.println("Invoice berhasil ditambahkan.");
+                        } else {
+                            System.out.println("Gagal menambah invoice.");
+                        }
                     } catch (NumberFormatException e) {
                         System.out.println("Format angka salah: " + e.getMessage());
                     } catch (IllegalArgumentException e) {
@@ -103,23 +107,25 @@ public class InvoiceDriver {
                     break;
 
                 case 5:
-                    System.out.println("Invoice Berdasarkan Nominal (terendah ke tertinggi):");
-                    for (Invoice invoice : Invoice.sortByNominal()) {
+                    System.out.println("Invoice Berdasarkan Nominal (tertinggi ke terendah):");
+                    List<Invoice> sortedNominal = Invoice.sortByNominal();
+                    for (Invoice invoice : sortedNominal) {
                         System.out.println(
-                            "ID: " + invoice.getIDInvoice() +
+                            "ID: " + invoice.getIdInvoice() +
                             ", Judul: " + invoice.getJudulInvoice() +
-                            ", Unit Price: " + invoice.getUnitPrice()
+                            ", Total Harga: " + invoice.getHargaTotalInvoice()
                         );
                     }
                     break;
 
                 case 6:
-                    System.out.println("Invoice Berdasarkan Tanggal (terlama ke terbaru):");
-                    for (Invoice invoice : Invoice.sortByDate()) {
+                    System.out.println("Invoice Berdasarkan Tanggal (terbaru ke terlama):");
+                    List<Invoice> sortedDate = Invoice.sortByDate();
+                    for (Invoice invoice : sortedDate) {
                         System.out.println(
-                            "ID: " + invoice.getIDInvoice() +
+                            "ID: " + invoice.getIdInvoice() +
                             ", Judul: " + invoice.getJudulInvoice() +
-                            ", Tanggal: " + (invoice.getTanggalInvoice() != null ? invoice.getTanggalInvoice().toString() : "null")
+                            ", Tanggal: " + (invoice.getTanggal() != null ? invoice.getTanggal().toString() : "null")
                         );
                     }
                     break;

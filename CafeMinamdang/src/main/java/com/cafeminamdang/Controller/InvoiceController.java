@@ -2,132 +2,103 @@ package com.cafeminamdang.Controller;
 
 import com.cafeminamdang.Model.Invoice;
 
-import java.util.Date;
-import java.util.List;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class InvoiceController {
     /**
-     * Controller for getting all invoices in database.
-     * Acts as an intermediary from view and model.
-     * @return list of invoices
+     * Gets all invoices from the database.
+     *
+     * @return A list of all Invoice objects in the database.
      */
-    public List<Invoice> getAllInvoices() {
-        return Invoice.getAllInvoices();
+    public List<Invoice> getAllInvoice() {
+        return Invoice.getAllInvoice();
     }
 
     /**
-     * Controller for saving an invoice based on the input on 
-     * the view. Acts as an intermediary from view and model.
-     * Expects an invoice as a parameter.
-     * @param invoice
-     * @return true if invoice is saved, false otherwise
+     * Gets an invoice by its ID from the database.
+     *
+     * @param idInvoice ID of the invoice to retrieve.
+     * @return The Invoice object with the given ID, or null if none found.
+     */
+    public Invoice getInvoiceById(int idInvoice) {
+        return Invoice.getInvoiceById(idInvoice);
+    }
+
+
+
+    /**
+     * Saves an invoice to the database. If the invoice ID is 0, a new invoice
+     * will be inserted. Otherwise, the invoice with the given ID will be
+     * updated.
+     *
+     * @param invoice The invoice to save.
+     * @return True if the invoice was successfully saved, false otherwise.
      */
     public boolean saveInvoice(Invoice invoice) {
-        if (invoice == null) {
-            return false;
-        }
-
-        if (invoice.getJudulInvoice() == null || invoice.getJudulInvoice().trim().isEmpty()) {
-            return false;
-        }
-
-        invoice.addInvoice(invoice);
-        return true;
+        return invoice.save();
     }
 
     /**
-     * Controller for deleting an invoice based on the input on 
-     * the view. Acts as an intermediary from view and model.
-     * Expects an invoice ID as a parameter.
-     * @param invoiceId
-     * @return true if invoice is deleted, false otherwise
+     * Deletes an invoice from the database.
+     *
+     * @param invoice The invoice to delete.
+     * @return True if the invoice was successfully deleted, false otherwise.
      */
-    public boolean deleteInvoice(Integer invoiceId) {
-        if (invoiceId == null) {
-            return false;
-        }
-
-        return Invoice.deleteInvoiceById(invoiceId);
+    public boolean deleteInvoice(Invoice invoice) {
+        return Invoice.deleteInvoiceById(invoice.getIdInvoice());
     }
 
     /**
-     * Controller for deleting an invoice based on the string ID input
-     * Converts the string ID to Integer and calls the main delete method
-     * @param invoiceIdStr String representation of invoice ID
-     * @return true if invoice is deleted, false otherwise
+     * Creates a new invoice with the given properties.
+     *
+     * @param judulInvoice The title of the invoice.
+     * @param tanggal The date of the invoice.
+     * @param idGudang The ID of the warehouse.
+     * @param unitPrice The unit price of the invoice.
+     * @param kuantitas The quantity of the invoice.
+     * @return The newly created Invoice object.
      */
-    public boolean deleteInvoice(String invoiceIdStr) {
-        if (invoiceIdStr == null || invoiceIdStr.trim().isEmpty()) {
-            return false;
-        }
-        
-        try {
-            Integer invoiceId = Integer.parseInt(invoiceIdStr);
-            return deleteInvoice(invoiceId);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Controller for creating a new invoice object to be inserted
-     * on the database. Acts as an intermediary from view and model.
-     * @param judulInvoice title of the invoice
-     * @param tanggal date of the invoice
-     * @param idGudang warehouse ID
-     * @param unitPrice unit price (BigDecimal)
-     * @param kuantitas quantity
-     * @return newly created Invoice object
-     */
-    public Invoice createInvoice(String judulInvoice, Date tanggal, Integer idGudang, BigDecimal unitPrice, Integer kuantitas) {
+    public Invoice createInvoice(String judulInvoice, String tanggal, int idGudang, BigDecimal unitPrice, int kuantitas) {
         return new Invoice(judulInvoice, tanggal, idGudang, unitPrice, kuantitas);
     }
 
     /**
-     * Controller for getting an invoice by ID
-     * @param invoiceId ID of the invoice to retrieve
-     * @return Invoice object if found, null otherwise
+     * Updates the given invoice's properties. This does not modify the database.
+     *
+     * @param invoice The invoice to update.
+     * @param judulInvoice The new title of the invoice.
+     * @param tanggal The new date of the invoice.
+     * @param idGudang The new ID of the warehouse.
+     * @param unitPrice The new unit price of the invoice.
+     * @param kuantitas The new quantity of the invoice.
+     * @return The updated Invoice object.
      */
-    public Invoice getInvoiceById(Integer invoiceId) {
-        if (invoiceId == null) {
-            return null;
-        }
-        return Invoice.getInvoiceById(invoiceId);
+    public Invoice updateInvoice(Invoice invoice, String judulInvoice, String tanggal, int idGudang, BigDecimal unitPrice, int kuantitas) {
+        invoice.setJudulInvoice(judulInvoice);
+        invoice.setTanggal(tanggal);
+        invoice.setIdGudang(idGudang);
+        invoice.setUnitPrice(unitPrice);
+        invoice.setKuantitas(kuantitas);
+        return invoice;
     }
-    
+
     /**
-     * Controller for getting an invoice by string ID
-     * Converts the string ID to Integer and calls the main get method
-     * @param invoiceIdStr String representation of invoice ID
-     * @return Invoice object if found, null otherwise
+     * Retrieves a list of all invoices sorted by their nominal value (total price) in descending order.
+     *
+     * @return A list of Invoice objects sorted by total price in descending order.
      */
-    public Invoice getInvoiceById(String invoiceIdStr) {
-        if (invoiceIdStr == null || invoiceIdStr.trim().isEmpty()) {
-            return null;
-        }
-        
-        try {
-            Integer invoiceId = Integer.parseInt(invoiceIdStr);
-            return getInvoiceById(invoiceId);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-    
-    /**
-     * Controller for getting invoices sorted by nominal amount
-     * @return list of invoices sorted by price
-     */
-    public List<Invoice> getInvoicesSortedByNominal() {
+
+    public List<Invoice> sortByNominal() {
         return Invoice.sortByNominal();
     }
-    
+
     /**
-     * Controller for getting invoices sorted by date
-     * @return list of invoices sorted by date
+     * Retrieves a list of all invoices sorted by their date in descending order.
+     *
+     * @return A list of Invoice objects sorted by date in descending order.
      */
-    public List<Invoice> getInvoicesSortedByDate() {
+    public List<Invoice> sortByDate() {
         return Invoice.sortByDate();
     }
 }
