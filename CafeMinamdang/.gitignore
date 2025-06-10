@@ -17,4 +17,7 @@ Thumbs.db
 # Logs
 *.log
 
+# Database (kalau mau file lokalnya diabaikan)
+*.db
+
 *.class

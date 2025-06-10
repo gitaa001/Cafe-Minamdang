@@ -1,218 +1,274 @@
 package com.cafeminamdang.Model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.util.Scanner;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.*;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 import com.cafeminamdang.Database.DatabaseManager;
 
 public class Resep {
     private static final Logger logger = Logger.getLogger(Resep.class.getName());
-    private DatabaseManager databaseManager = DatabaseManager.getInstance();
+    
+    private int idResep;
+    private String namaResep;
+    private String deskripsi;
+    private String preskripsi;
 
-    // Define properties for TableView binding
-    private StringProperty nama;
-    private StringProperty deskripsi;
-    private StringProperty resep;
-    private StringProperty idResep;
+    // Constructor
 
-    public Resep(String nama, String deskripsi, String resep, String idResep) {
-        this.nama = new SimpleStringProperty(nama);
-        this.deskripsi = new SimpleStringProperty(deskripsi);
-        this.resep = new SimpleStringProperty(resep);
-        this.idResep = new SimpleStringProperty(idResep);
+    public Resep(){
+
     }
 
-    // Getter untuk properti yang bisa digunakan di TableView
-    public StringProperty namaProperty() {
-        return nama;
+    public Resep(int idResep, String namaResep, String deskripsi, String preskripsi){
+        this.idResep = idResep;
+        this.namaResep = namaResep;
+        this.deskripsi = deskripsi;
+        this.preskripsi = preskripsi;
     }
 
-    public StringProperty deskripsiProperty() {
-        return deskripsi;
-    }
+    // Getter Setter
 
-    public StringProperty resepProperty() {
-        return resep;
-    }
-
-    public StringProperty idresepProperty(){
+    public int getIdResep(){
         return idResep;
     }
 
-    // Method untuk menambah resep ke database
-    public void tambahResep(String kode, String nama, String deskripsi, String resep, String harga, String idGudang) {
-        try (Connection conn = getConnection()) {
-            String sql = "INSERT INTO Resep (NamaResep, Deskripsi, Preskripsi, Harga, IDGudang) VALUES (?, ?, ?, ?, ?)";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, nama);
-                pstmt.setString(2, deskripsi);
-                pstmt.setString(3, resep);
-                pstmt.setString(4, harga);
-                pstmt.setString(5, idGudang);
-                pstmt.executeUpdate();
-                logger.info("Resep added successfully.");
-            }
-        } catch (SQLException e) {
-            logger.severe("Error adding recipe: " + e.getMessage());
-        }
+    public void setIdResep(int idResep){
+        this.idResep = idResep;
     }
 
-
-    // Method untuk update resep di database
-    public void updateResep(int idResep, String nama, String deskripsi, String resep, String harga, String idGudang) {
-        try (Connection conn = getConnection()) {
-            String sql = "UPDATE Resep SET NamaResep = ?, Deskripsi = ?, Preskripsi = ?, Harga = ?, IDGudang = ? WHERE IDResep = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, nama);
-                pstmt.setString(2, deskripsi);
-                pstmt.setString(3, resep);
-                pstmt.setString(4, harga);
-                pstmt.setString(5, idGudang);
-                pstmt.setInt(6, idResep);
-                pstmt.executeUpdate();
-                logger.info("Resep updated successfully.");
-            }
-        } catch (SQLException e) {
-            logger.severe("Error updating recipe: " + e.getMessage());
-        }
+    public String getNamaResep(){
+        return namaResep;
     }
 
-    // Method untuk mengambil koneksi dari DatabaseManager
-    public Connection getConnection() {
-        return databaseManager.getConnection();  // Access connection via DatabaseManager Singleton
+    public void setNamaResep(String namaResep){
+        this.namaResep = namaResep;
     }
 
-    // Method untuk mengambil semua resep
-    public static ObservableList<Resep> getAllResep() {
-        ObservableList<Resep> list = FXCollections.observableArrayList();  // ObservableList untuk TableView
-        String sql = "SELECT * FROM Resep";  // Query untuk mengambil semua data resep
-        try (Connection conn = DatabaseManager.getInstance().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            // Loop untuk memasukkan setiap baris data dari ResultSet ke dalam ObservableList
+    public String getDeskripsi(){
+        return deskripsi;
+    }
+
+    public void setDeskripsi(String deskripsi){
+        this.deskripsi = deskripsi;
+    }
+
+    public String getPreskripsi(){
+        return preskripsi;
+    }
+
+    public void setPreskripsi(String preskripsi){
+        this.preskripsi = preskripsi;
+    }
+
+    @Override // CLI Testing
+    public String toString() {
+        return "Resep{" +
+                "idResep=" + idResep +
+                ", namaResep='" + namaResep + '\'' +
+                ", deskripsi='" + deskripsi + '\'' +
+                ", preskripsi='" + preskripsi + '\'' +
+                '}';
+    }
+
+    // CRUD
+
+    /**
+     * Get all recipes from database
+     * @return list of all recipes
+     */
+    public static List<Resep> getAllResep(){
+        List<Resep> resepList = new ArrayList<>();
+        String sql = "SELECT * FROM Resep ORDER BY IDResep";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
+            // int i = 1;
+
             while (rs.next()) {
-                String namaResep = rs.getString("NamaResep");
-                String deskripsi = rs.getString("Deskripsi");
-                String preskripsi = rs.getString("Preskripsi");
-                String IDResep = rs.getString("IDResep");
-                list.add(new Resep(namaResep, deskripsi, preskripsi, IDResep));
-            }
-            
-        } catch (SQLException e) {
-            logger.severe("Error fetching recipes: " + e.getMessage());
-        } catch (Exception e) {
-            logger.severe(e.getMessage());
-        }
-        return list;  // Kembalikan ObservableList yang berisi semua resep
-    }
-
-    // Method untuk menghapus resep
-    public void deleteResep(int idResep) {
-        try (Connection conn = getConnection()) {
-            String sql = "DELETE FROM Resep WHERE IDResep = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setInt(1, idResep);
-                pstmt.executeUpdate();
-                logger.info("Resep deleted successfully.");
+                Resep resep = new Resep();
+                resep.setIdResep(rs.getInt("IDResep"));
+                resep.setNamaResep(rs.getString("NamaResep"));
+                resep.setDeskripsi(rs.getString("Deskripsi"));
+                resep.setPreskripsi(rs.getString("Preskripsi"));
+                resepList.add(resep);
+                // System.out.println((i++) + resep.toString());
             }
         } catch (SQLException e) {
-            logger.severe("Error deleting recipe: " + e.getMessage());
+            logger.info("Error retrieving recipes : " + e.getMessage());
         }
+
+        return resepList;
     }
 
-    public static void main (String[] args){
-        Scanner scanner = new Scanner(System.in);
-        Resep resep = new Resep("", "", "", "");
+    /**
+     * Get spesific recipe by ID
+     * @param id Recipe ID to find
+     * @return Recipe object if found, null otherwise
+     */
+    public static Resep getResepByID(int id) {
+        String sql = "SELECT * FROM Resep WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
 
-        // Menu pilihan untuk pengguna
-        while (true) {
-            System.out.println("===== Menu =====");
-            System.out.println("1. Lihat semua resep");
-            System.out.println("2. Tambah resep");
-            System.out.println("3. Update resep");
-            System.out.println("4. Hapus resep");
-            System.out.println("5. Keluar");
-            System.out.print("Pilih opsi (1-5): ");
-            
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // untuk menangkap newline setelah nextInt
-            
-            switch (choice) {
-                case 1:
-                    // Lihat semua resep
-                    System.out.println("Daftar Resep:");
-                    for (Resep r : Resep.getAllResep()) {
-                        System.out.println("ID: " + r.namaProperty().get() + ", Nama: " + r.deskripsiProperty().get() + ", Deskripsi: " + r.resepProperty().get() + ", Resep ID: " + r.idresepProperty().get());
-                    }
-                    break;
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-                case 2:
-                    // Tambah resep
-                    System.out.println("Masukkan data resep baru:");
-                    System.out.print("Nama Resep: ");
-                    String nama = scanner.nextLine();
-                    System.out.print("Deskripsi: ");
-                    String deskripsi = scanner.nextLine();
-                    System.out.print("Preskripsi: ");
-                    String preskripsi = scanner.nextLine();
-                    System.out.print("Harga: ");
-                    String harga = scanner.nextLine();
-                    System.out.print("ID Gudang: ");
-                    String idGudang = scanner.nextLine();
+            pstmt.setInt(1, id); // mengubah parameter ? menjadi id masukan parameter
+            ResultSet rs = pstmt.executeQuery();
 
-                    // Menambahkan resep ke database
-                    resep.tambahResep(null, nama, deskripsi, preskripsi, harga, idGudang);
-                    break;
-
-                case 3:
-                    // Update resep
-                    System.out.print("Masukkan ID Resep untuk update: ");
-                    int idUpdate = scanner.nextInt();
-                    scanner.nextLine(); // untuk menangkap newline setelah nextInt
-                    System.out.println("Masukkan data baru:");
-                    System.out.print("Nama Resep: ");
-                    String namaUpdate = scanner.nextLine();
-                    System.out.print("Deskripsi: ");
-                    String deskripsiUpdate = scanner.nextLine();
-                    System.out.print("Preskripsi: ");
-                    String preskripsiUpdate = scanner.nextLine();
-                    System.out.print("Harga: ");
-                    String hargaUpdate = scanner.nextLine();
-                    System.out.print("ID Gudang: ");
-                    String idGudangUpdate = scanner.nextLine();
-                    
-                    // Update resep di database
-                    resep.updateResep(idUpdate, namaUpdate, deskripsiUpdate, preskripsiUpdate, hargaUpdate, idGudangUpdate);
-                    break;
-
-                case 4:
-                    // Hapus resep
-                    System.out.print("Masukkan ID Resep yang ingin dihapus: ");
-                    int idDelete = scanner.nextInt();
-                    scanner.nextLine(); // untuk menangkap newline setelah nextInt
-                    
-                    // Hapus resep di database
-                    resep.deleteResep(idDelete);
-                    break;
-
-                case 5:
-                    // Keluar dari aplikasi
-                    System.out.println("Terima kasih!");
-                    scanner.close();
-                    return;
-
-                default:
-                    System.out.println("Opsi tidak valid. Silakan coba lagi.");
+            if (rs.next()){
+                Resep resep = new Resep();
+                resep.setIdResep(rs.getInt("IDResep"));
+                resep.setNamaResep(rs.getString("NamaResep"));
+                resep.setDeskripsi(rs.getString("Deskripsi"));
+                resep.setPreskripsi(rs.getString("Preskripsi"));
+                
+                return resep;  
             }
+        } catch (SQLException e) { 
+            logger.severe("Error retrieving recipe #" + id + ": " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
+     * Save recipe to database (insert or update) 
+     * based on the idResep if idResep is > 0 then
+     * update but if its < 0 then its a new object
+     * therefore insert the data to the database
+     * @return true if successful, false otherwise
+     */
+    public boolean save(){
+        if (idResep > 0) {
+            return update();
+        } else {
+            return insert();
         }
     }
+
+    /**
+     * Insert new instance of a recipe to database
+     * @return true if data is inserted, false otherwise
+     */
+    private boolean insert() {
+        String sql = "INSERT INTO Resep (NamaResep, Deskripsi, Preskripsi) VALUES (?, ?, ?)";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, namaResep);
+            pstmt.setString(2, deskripsi);
+            pstmt.setString(3, preskripsi);
+
+            int affectedRows = pstmt.executeUpdate(); // Mendapatkan row yang terkena dampak seharusnya 1
+
+            if (affectedRows > 0){
+                try (Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT last_insert_rowid()")) {
+                        idResep = rs.getInt(1);
+                        logger.info("Recipe inserted: " + idResep);
+                        return true;
+                }
+            }
+        } catch (SQLException e) {
+            logger.severe("Error inserting recipe: " + e.getMessage());
+        }
+
+        return false;
+    }
+
+    /**
+     * Update existing recipe in the database
+     * @return true if succesful, false otherwise
+     */
+    private boolean update() {
+        String sql = "UPDATE Resep SET NamaResep = ?, Deskripsi = ?, Preskripsi = ? WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (PreparedStatement ptsmt = conn.prepareStatement(sql)) {
+            
+            ptsmt.setString(1, namaResep);
+            ptsmt.setString(2, deskripsi);
+            ptsmt.setString(3, preskripsi);
+            ptsmt.setInt(4, idResep);
+
+            int affectedRows = ptsmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                logger.info("Recipe updated: " + idResep);
+                return true;
+            }
+        } catch (SQLException e) {
+            logger.severe("Error updating recipe #" + idResep + ": " + e.getMessage()); 
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a recipe from the databse
+     * @return true if successful, false otherwise
+     */
+    public boolean delete() {
+        String sql = "DELETE FROM Resep WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idResep);
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                logger.info("Recipe deleted: " + idResep);
+                return true;
+            } 
+        } catch (SQLException e) {
+                logger.severe("Error deleting recipe #" + idResep + ": " + e.getMessage()); 
+        }
+
+        return false;
+    }
+
+    /**
+     * Delete a recipe from the databse
+     * @param id Recipe ID to be deleted
+     * @return true if successful, false otherwise
+     */
+    public static boolean deleteById(int id) {
+        String sql = "DELETE FROM Resep WHERE IDResep = ?";
+        Connection conn = DatabaseManager.getInstance().getConnection();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                logger.info("Recipe deleted: " + id);
+                return true;
+            } 
+        } catch (SQLException e) {
+                logger.severe("Error deleting recipe #" + id + ": " + e.getMessage()); 
+        }
+
+        return false;
+    }
+
+    // Driver
+    // public static void main (String[] args) {
+    //     List<Resep> listReseps = new ArrayList<>();
+    //     listReseps = Resep.getAllResep();
+
+    //     for (Resep resep : listReseps){
+    //         System.out.println(resep.toString());
+    //     }
+    // }
 }
