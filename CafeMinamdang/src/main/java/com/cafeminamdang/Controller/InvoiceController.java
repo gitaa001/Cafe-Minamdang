@@ -1,13 +1,12 @@
 package com.cafeminamdang.Controller;
 
 import com.cafeminamdang.Model.Invoice;
-import com.cafeminamdang.Model.Barang;
 
 import java.util.Date;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class InvoiceController {
-    
     /**
      * Controller for getting all invoices in database.
      * Acts as an intermediary from view and model.
@@ -76,14 +75,13 @@ public class InvoiceController {
      * on the database. Acts as an intermediary from view and model.
      * @param judulInvoice title of the invoice
      * @param tanggal date of the invoice
-     * @param barang item referenced by the invoice
-     * @param hargaTotal total price
-     * @param kuantitas quantity
      * @param idGudang warehouse ID
+     * @param unitPrice unit price (BigDecimal)
+     * @param kuantitas quantity
      * @return newly created Invoice object
      */
-    public Invoice createInvoice(String judulInvoice, Date tanggal, Barang barang, Integer hargaTotal, Integer kuantitas, Integer idGudang) {
-        return new Invoice(judulInvoice, tanggal, barang, hargaTotal, kuantitas, idGudang);
+    public Invoice createInvoice(String judulInvoice, Date tanggal, Integer idGudang, BigDecimal unitPrice, Integer kuantitas) {
+        return new Invoice(judulInvoice, tanggal, idGudang, unitPrice, kuantitas);
     }
 
     /**

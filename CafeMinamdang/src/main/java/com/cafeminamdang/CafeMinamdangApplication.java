@@ -1,6 +1,6 @@
 package com.cafeminamdang;
 
-import com.cafeminamdang.View.MenuView;
+import com.cafeminamdang.View.InvoiceView;
 import com.cafeminamdang.View.ViewManager;
 
 import javafx.application.Application;
@@ -17,8 +17,8 @@ public class CafeMinamdangApplication extends Application {
         ViewManager viewManager = ViewManager.getInstance();
         viewManager.setPrimaryStage(primaryStage);
         
-        MenuView menuView = new MenuView();
-        viewManager.registerView("menu", menuView);
+        InvoiceView invoiceView = new InvoiceView();
+        viewManager.registerView("menu", invoiceView);
         
         viewManager.initializeView("menu");
         

@@ -2,7 +2,6 @@ package com.cafeminamdang.View;
 
 import com.cafeminamdang.Model.Invoice;
 import com.cafeminamdang.Controller.InvoiceController;
-import com.cafeminamdang.Model.Barang;
 
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
@@ -19,6 +18,7 @@ import javafx.scene.Node;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -61,11 +61,6 @@ public class InvoiceView implements BaseView {
         loadData();
     }
 
-    /**
-     * Refreshing the content of table view by
-     * wrapping the invoices with an observable list
-     * to satisfy tableview parameter.
-     */
     private void loadData(){
         List<Invoice> invoices = invoiceController.getAllInvoices();
         dataInvoice = FXCollections.observableArrayList(invoices);
@@ -199,41 +194,26 @@ public class InvoiceView implements BaseView {
             }
         });
         dateColumn.setPrefWidth(100);
-        
-        TableColumn<Invoice, Barang> itemColumn = new TableColumn<>("Item");
-        itemColumn.setCellValueFactory(cellData -> cellData.getValue().barangProperty());
-        itemColumn.setCellFactory(column -> new TableCell<Invoice, Barang>() {
+
+        TableColumn<Invoice, BigDecimal> priceColumn = new TableColumn<>("Unit Price");
+        priceColumn.setCellValueFactory(cellData -> cellData.getValue().unitPriceProperty());
+        priceColumn.setCellFactory(column -> new TableCell<Invoice, BigDecimal>() {
             @Override
-            protected void updateItem(Barang item, boolean empty) {
+            protected void updateItem(BigDecimal item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getNamaBarang());
-                }
-            }
-        });
-        itemColumn.setPrefWidth(150);
-        
-        TableColumn<Invoice, Integer> qtyColumn = new TableColumn<>("Qty");
-        qtyColumn.setCellValueFactory(cellData -> cellData.getValue().kuantitasProperty().asObject());
-        qtyColumn.setPrefWidth(60);
-        
-        TableColumn<Invoice, Integer> priceColumn = new TableColumn<>("Total Price");
-        priceColumn.setCellValueFactory(cellData -> cellData.getValue().hargaTotalProperty().asObject());
-        priceColumn.setCellFactory(column -> new TableCell<Invoice, Integer>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText("Rp " + String.format("%,d", item));
+                    setText("Rp " + String.format("%,.2f", item));
                 }
             }
         });
         priceColumn.setPrefWidth(120);
         
+        TableColumn<Invoice, Integer> qtyColumn = new TableColumn<>("Qty");
+        qtyColumn.setCellValueFactory(cellData -> cellData.getValue().kuantitasProperty().asObject());
+        qtyColumn.setPrefWidth(60);
+
         TableColumn<Invoice, Integer> warehouseColumn = new TableColumn<>("Warehouse ID");
         warehouseColumn.setCellValueFactory(cellData -> cellData.getValue().idGudangProperty().asObject());
         warehouseColumn.setPrefWidth(100);
@@ -267,7 +247,7 @@ public class InvoiceView implements BaseView {
             }
         });
         
-        tableView.getColumns().addAll(idColumn, titleColumn, dateColumn, itemColumn, qtyColumn, priceColumn, warehouseColumn, actionsColumn);
+        tableView.getColumns().addAll(idColumn, titleColumn, dateColumn, priceColumn, qtyColumn, warehouseColumn, actionsColumn);
         
         // Load data
         loadData();
@@ -382,45 +362,15 @@ public class InvoiceView implements BaseView {
         Label dateLabel = new Label("Date:");
         DatePicker datePicker = new DatePicker(LocalDate.now());
 
-        // Item selection (Barang)
-        Label itemLabel = new Label("Item:");
-        ComboBox<Barang> itemComboBox = new ComboBox<>();
-        
-        // Populate with available items
-        ObservableList<Barang> itemList = FXCollections.observableArrayList(Barang.getAllBarang());
-        itemComboBox.setItems(itemList);
-        itemComboBox.setCellFactory(param -> new ListCell<Barang>() {
-            @Override
-            protected void updateItem(Barang item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getNamaBarang());
-                }
-            }
-        });
-        itemComboBox.setButtonCell(new ListCell<Barang>() {
-            @Override
-            protected void updateItem(Barang item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getNamaBarang());
-                }
-            }
-        });
-
         // Quantity
         Label qtyLabel = new Label("Quantity:");
         TextField qtyField = new TextField();
         qtyField.setPromptText("Enter quantity");
 
         // Price
-        Label priceLabel = new Label("Total Price:");
+        Label priceLabel = new Label("Unit Price:");
         TextField priceField = new TextField();
-        priceField.setPromptText("Enter total price");
+        priceField.setPromptText("Enter unit price");
 
         // Warehouse
         Label warehouseLabel = new Label("Warehouse ID:");
@@ -432,14 +382,12 @@ public class InvoiceView implements BaseView {
         form.add(titleField, 1, 0);
         form.add(dateLabel, 0, 1);
         form.add(datePicker, 1, 1);
-        form.add(itemLabel, 0, 2);
-        form.add(itemComboBox, 1, 2);
-        form.add(qtyLabel, 0, 3);
-        form.add(qtyField, 1, 3);
-        form.add(priceLabel, 0, 4);
-        form.add(priceField, 1, 4);
-        form.add(warehouseLabel, 0, 5);
-        form.add(warehouseField, 1, 5);
+        form.add(qtyLabel, 0, 2);
+        form.add(qtyField, 1, 2);
+        form.add(priceLabel, 0, 3);
+        form.add(priceField, 1, 3);
+        form.add(warehouseLabel, 0, 4);
+        form.add(warehouseField, 1, 4);
 
         HBox buttonBar = new HBox(10);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
@@ -453,18 +401,11 @@ public class InvoiceView implements BaseView {
         saveButton.setOnAction(e -> {
             try {
                 // Validate inputs
-                Barang selectedItem = itemComboBox.getValue();
-                if (selectedItem == null) {
-                    showAlert("Error", "Please select an item");
-                    return;
-                }
-                
                 String title = titleField.getText().trim();
                 if (title.isEmpty()) {
                     showAlert("Error", "Please enter an invoice title");
                     return;
                 }
-                
                 Date date = Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
                 
                 int quantity;
@@ -479,15 +420,15 @@ public class InvoiceView implements BaseView {
                     return;
                 }
                 
-                int totalPrice;
+                BigDecimal unitPrice;
                 try {
-                    totalPrice = Integer.parseInt(priceField.getText().trim());
-                    if (totalPrice <= 0) {
-                        showAlert("Error", "Price must be greater than zero");
+                    unitPrice = new BigDecimal(priceField.getText().trim());
+                    if (unitPrice.compareTo(BigDecimal.ZERO) <= 0) {
+                        showAlert("Error", "Unit price must be greater than zero");
                         return;
                     }
                 } catch (NumberFormatException ex) {
-                    showAlert("Error", "Please enter a valid price");
+                    showAlert("Error", "Please enter a valid unit price");
                     return;
                 }
                 
@@ -505,11 +446,11 @@ public class InvoiceView implements BaseView {
                 
                 // Create and save invoice
                 Invoice invoice = invoiceController.createInvoice(
-                    title, date, selectedItem, totalPrice, quantity, warehouseId
+                    title, date, warehouseId, unitPrice, quantity
                 );
                 
                 boolean success = invoiceController.saveInvoice(invoice);
-                
+
                 if (success) {
                     showListView();
                     loadData();
@@ -597,17 +538,13 @@ public class InvoiceView implements BaseView {
         dateLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         Label dateValue = new Label(formattedDate);
         
-        Label itemLabel = new Label("Item:");
-        itemLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        Label itemValue = new Label(invoice.getBarangInvoice().getNamaBarang());
-        
         Label qtyLabel = new Label("Quantity:");
         qtyLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         Label qtyValue = new Label(invoice.getKuantitasInvoice().toString());
         
-        Label priceLabel = new Label("Total Price:");
+        Label priceLabel = new Label("Unit Price:");
         priceLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        Label priceValue = new Label("Rp " + String.format("%,d", invoice.getHargaTotalInvoice()));
+        Label priceValue = new Label("Rp " + String.format("%,.2f", invoice.getUnitPrice()));
         
         Label warehouseLabel = new Label("Warehouse ID:");
         warehouseLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -617,26 +554,14 @@ public class InvoiceView implements BaseView {
         infoGrid.add(idValue, 1, 0);
         infoGrid.add(dateLabel, 0, 1);
         infoGrid.add(dateValue, 1, 1);
-        infoGrid.add(itemLabel, 0, 2);
-        infoGrid.add(itemValue, 1, 2);
-        infoGrid.add(qtyLabel, 0, 3);
-        infoGrid.add(qtyValue, 1, 3);
-        infoGrid.add(priceLabel, 0, 4);
-        infoGrid.add(priceValue, 1, 4);
-        infoGrid.add(warehouseLabel, 0, 5);
-        infoGrid.add(warehouseValue, 1, 5);
-        
-        // Item details section
-        Label itemDetailsHeader = new Label("Item Details");
-        itemDetailsHeader.setFont(Font.font("Arial", FontWeight.BOLD, 16));
-        
-        Label descLabel = new Label("Description:");
-        descLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        
-        Label descText = new Label(invoice.getBarangInvoice().getDeskripsi());
-        descText.setWrapText(true);
+        infoGrid.add(qtyLabel, 0, 2);
+        infoGrid.add(qtyValue, 1, 2);
+        infoGrid.add(priceLabel, 0, 3);
+        infoGrid.add(priceValue, 1, 3);
+        infoGrid.add(warehouseLabel, 0, 4);
+        infoGrid.add(warehouseValue, 1, 4);
 
-        details.getChildren().addAll(infoGrid, new Separator(), itemDetailsHeader, descLabel, descText);
+        details.getChildren().addAll(infoGrid);
 
         HBox buttonBar = new HBox(10);
         buttonBar.setAlignment(Pos.CENTER_RIGHT);
@@ -659,23 +584,18 @@ public class InvoiceView implements BaseView {
     }
 
     private void showFormView(Invoice invoice) {
-        
         GridPane form = (GridPane) formView.getChildren().get(1);
         Label formTitle = (Label) formView.getChildren().get(0);
-        
         formTitle.setText("Add New Invoice");
-        
         // Clear all form fields
         TextField titleField = (TextField) form.getChildren().get(1);
         DatePicker datePicker = (DatePicker) form.getChildren().get(3);
-        ComboBox<Barang> itemComboBox = (ComboBox<Barang>) form.getChildren().get(5);
-        TextField qtyField = (TextField) form.getChildren().get(7);
-        TextField priceField = (TextField) form.getChildren().get(9);
-        TextField warehouseField = (TextField) form.getChildren().get(11);
-        
+        TextField qtyField = (TextField) form.getChildren().get(5);
+        TextField priceField = (TextField) form.getChildren().get(7);
+        TextField warehouseField = (TextField) form.getChildren().get(9);
+
         titleField.clear();
         datePicker.setValue(null);
-        itemComboBox.setValue(null);
         qtyField.clear();
         priceField.clear();
         warehouseField.clear();
