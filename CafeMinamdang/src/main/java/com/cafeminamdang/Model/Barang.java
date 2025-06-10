@@ -9,7 +9,6 @@ import com.cafeminamdang.Database.DatabaseManager;
 
 public class Barang {
     private static final Logger logger = Logger.getLogger(Barang.class.getName());
-    private DatabaseManager databaseManager = DatabaseManager.getInstance();
 
     private Integer idBarang;
     private String nama;
