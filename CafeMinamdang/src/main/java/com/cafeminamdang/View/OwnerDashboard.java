@@ -4,13 +4,11 @@ import com.cafeminamdang.Model.Penjualan;
 import com.cafeminamdang.Controller.PenjualanController;
 
 import java.util.List;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Locale.Category;
 
 import javafx.geometry.Insets;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.PieChart;
+// import javafx.scene.chart.BarChart;
+// import javafx.scene.chart.PieChart;
 import javafx.scene.chart.AreaChart;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
