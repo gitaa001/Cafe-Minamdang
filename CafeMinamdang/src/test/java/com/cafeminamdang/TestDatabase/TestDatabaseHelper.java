@@ -67,6 +67,18 @@ public class TestDatabaseHelper {
         try {
             Connection conn = DatabaseManager.getInstance().getConnection();
             Statement stmt = conn.createStatement();
+            // Hapus semua data di tabel Invoice
+            stmt.executeUpdate("DELETE FROM Invoice");
+            // Reset autoincrement (khusus SQLite, opsional)
+            stmt.executeUpdate("DELETE FROM sqlite_sequence WHERE name='Invoice'");
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        try {
+            Connection conn = DatabaseManager.getInstance().getConnection();
+            Statement stmt = conn.createStatement();
             stmt.execute("DELETE FROM Invoice");
             stmt.execute("DELETE FROM sqlite_sequence WHERE name='Invoice'");
             stmt.close();
@@ -79,18 +91,9 @@ public class TestDatabaseHelper {
         try {
             Connection conn = DatabaseManager.getInstance().getConnection();
             Statement stmt = conn.createStatement();
-
-            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES ('Pembelian Kopi Arabica', '2025-06-02', 1, 60000, 50)");
-            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES ('Pembelian Kopi Robusta', '2025-06-02', 1, 65000, 50)");
-            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES ('Pembelian Kopi Pacamara', '2025-06-02', 1, 70000, 50)");
-            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES ('Pembelian Kopi Liberica', '2025-06-02', 1, 50000, 50)");
-            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
-                    "VALUES ('Pembelian Kopi Excelsa', '2025-06-02', 1, 40000, 50)");
-
+            // Hanya insert data dummy berikut, tidak ada insert lain!
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) VALUES ('Invoice A', '2025-06-11', 1, 10000, 2)");
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) VALUES ('Invoice B', '2025-06-10', 2, 20000, 1)");
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
