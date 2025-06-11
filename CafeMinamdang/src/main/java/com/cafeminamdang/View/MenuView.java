@@ -200,6 +200,9 @@ public class MenuView implements BaseView {
                     return poppinsReg != null ? poppinsReg : Font.getDefault();
             }
         } catch (Exception e) {
+            e.getCause();
+            e.getMessage();
+            e.printStackTrace();
             return Font.getDefault();
         }
     }

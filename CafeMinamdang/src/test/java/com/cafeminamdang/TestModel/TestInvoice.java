@@ -46,7 +46,7 @@ class InvoiceTest {
         assertTrue(saved);
 
         int afterSize = Invoice.getAllInvoice().size();
-        assertEquals(beforeSize + 1, afterSize); // ← fleksibel, no hardcoded
+        assertEquals(beforeSize + 1, afterSize); // fleksibel, no hardcoded
     }
 
     @Test
@@ -76,7 +76,7 @@ class InvoiceTest {
         long expected = all.stream().filter(i -> i.getIdGudang() == 1).count();
 
         List<Invoice> fromGudang1 = Invoice.getAllInvoiceFromSpecificWh(1);
-        assertEquals(expected, fromGudang1.size()); // ← no hardcoded
+        assertEquals(expected, fromGudang1.size()); //  no hardcoded
     }
 
 
