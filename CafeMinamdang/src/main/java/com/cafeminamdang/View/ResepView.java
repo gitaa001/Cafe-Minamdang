@@ -180,6 +180,9 @@ public class ResepView implements BaseView {
         
         return container;
     }
+public static void main(String[] args) {
+    javafx.application.Application.launch(args);
+}
 
     private VBox createDetailView(){
         VBox container = new VBox(20);
