@@ -14,7 +14,7 @@ import com.cafeminamdang.Database.DatabaseManager;
 public class Resep {
     private static final Logger logger = Logger.getLogger(Resep.class.getName());
     
-    private int idResep;
+    private Integer idResep;
     private String namaResep;
     private String deskripsi;
     private String preskripsi;
@@ -25,7 +25,7 @@ public class Resep {
 
     }
 
-    public Resep(int idResep, String namaResep, String deskripsi, String preskripsi){
+    public Resep(Integer idResep, String namaResep, String deskripsi, String preskripsi){
         this.idResep = idResep;
         this.namaResep = namaResep;
         this.deskripsi = deskripsi;
@@ -34,11 +34,11 @@ public class Resep {
 
     // Getter Setter
 
-    public int getIdResep(){
+    public Integer getIdResep(){
         return idResep;
     }
 
-    public void setIdResep(int idResep){
+    public void setIdResep(Integer idResep){
         this.idResep = idResep;
     }
 
@@ -112,7 +112,7 @@ public class Resep {
      * @param id Recipe ID to find
      * @return Recipe object if found, null otherwise
      */
-    public static Resep getResepByID(int id) {
+    public static Resep getResepByID(Integer id) {
         String sql = "SELECT * FROM Resep WHERE IDResep = ?";
         Connection conn = DatabaseManager.getInstance().getConnection();
 
@@ -145,7 +145,7 @@ public class Resep {
      * @return true if successful, false otherwise
      */
     public boolean save(){
-        if (idResep > 0) {
+        if (idResep != null && idResep > 0) {
             return update();
         } else {
             return insert();
@@ -166,7 +166,7 @@ public class Resep {
             pstmt.setString(2, deskripsi);
             pstmt.setString(3, preskripsi);
 
-            int affectedRows = pstmt.executeUpdate(); // Mendapatkan row yang terkena dampak seharusnya 1
+            Integer affectedRows = pstmt.executeUpdate(); // Mendapatkan row yang terkena dampak seharusnya 1
 
             if (affectedRows > 0){
                 try (Statement stmt = conn.createStatement();
@@ -198,7 +198,7 @@ public class Resep {
             ptsmt.setString(3, preskripsi);
             ptsmt.setInt(4, idResep);
 
-            int affectedRows = ptsmt.executeUpdate();
+            Integer affectedRows = ptsmt.executeUpdate();
 
             if (affectedRows > 0) {
                 logger.info("Recipe updated: " + idResep);
@@ -223,7 +223,7 @@ public class Resep {
 
             pstmt.setInt(1, idResep);
 
-            int affectedRows = pstmt.executeUpdate();
+            Integer affectedRows = pstmt.executeUpdate();
 
             if (affectedRows > 0) {
                 logger.info("Recipe deleted: " + idResep);
@@ -241,7 +241,7 @@ public class Resep {
      * @param id Recipe ID to be deleted
      * @return true if successful, false otherwise
      */
-    public static boolean deleteById(int id) {
+    public static boolean deleteById(Integer id) {
         String sql = "DELETE FROM Resep WHERE IDResep = ?";
         Connection conn = DatabaseManager.getInstance().getConnection();
 
@@ -249,7 +249,7 @@ public class Resep {
 
             pstmt.setInt(1, id);
 
-            int affectedRows = pstmt.executeUpdate();
+            Integer affectedRows = pstmt.executeUpdate();
 
             if (affectedRows > 0) {
                 logger.info("Recipe deleted: " + id);
