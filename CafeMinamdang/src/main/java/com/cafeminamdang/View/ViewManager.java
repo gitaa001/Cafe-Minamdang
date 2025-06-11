@@ -54,6 +54,10 @@ public class ViewManager {
                     view = new OwnerDashboard();
                     viewCache.put(name, view);
                     break;
+                case "purchasing":
+                    view = new InvoiceView();
+                    viewCache.put(name, view);
+                    break;
                 default:
                     throw new IllegalArgumentException("No view registered with name: " + name);
             }

@@ -154,14 +154,13 @@ public class MenuView implements BaseView {
                     break;
                 case "Branch Manager":
                     viewManager.setRole(Role.BRANCH_MANAGER);
-                    System.out.println(selectedGudang);
                     viewManager.setIdGudang(selectedGudang);
                     viewManager.switchView("barang");
                     break;
                 case "Purchasing":
                     viewManager.setRole(Role.PURCHASING);
                     viewManager.setIdGudang(selectedGudang);
-                    viewManager.switchView("purchasing dashboard");
+                    viewManager.switchView("purchasing");
                     break;
                 default:
                     break;
