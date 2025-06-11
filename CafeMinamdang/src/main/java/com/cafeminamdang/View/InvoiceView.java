@@ -207,7 +207,6 @@ public class InvoiceView implements BaseView {
         Label dateLabel = new Label("Tanggal (YYYY-MM-DD):");
         TextField dateField = new TextField();
 
-        Label gudangLabel = new Label("ID Gudang:");
         Spinner<Integer> gudangSpinner = new Spinner<>(0, Integer.MAX_VALUE, 0);
         gudangSpinner.setEditable(true);
         gudangSpinner.setPrefWidth(300);
@@ -364,20 +363,17 @@ public class InvoiceView implements BaseView {
         TextField titleField = (TextField) form.getChildren().get(1);
         TextField dateField = (TextField) form.getChildren().get(3);
         TextField unitPriceField = (TextField) form.getChildren().get(5);
-        Spinner<Integer> qtySpinner = (Spinner<Integer>) form.getChildren().get(7);
 
         if (invoice == null) {
             formTitle.setText("Add New Invoice");
             titleField.clear();
             dateField.clear();
             unitPriceField.clear();
-            qtySpinner.getValueFactory().setValue(0);
         } else {
             formTitle.setText("Edit Invoice");
             titleField.setText(invoice.getJudulInvoice());
             dateField.setText(invoice.getTanggal());
             unitPriceField.setText(invoice.getUnitPrice().toString());
-            qtySpinner.getValueFactory().setValue(invoice.getKuantitas());
         }
 
         mainPanel.setCenter(formView);
