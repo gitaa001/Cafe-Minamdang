@@ -80,16 +80,23 @@ public class TestDatabaseHelper {
             Connection conn = DatabaseManager.getInstance().getConnection();
             Statement stmt = conn.createStatement();
 
-            stmt.executeUpdate("INSERT INTO Invoice (Tanggal, Total, IDCustomer) " +
-                    "VALUES ('2025-06-11', 100000, 1)");
-            stmt.executeUpdate("INSERT INTO Invoice (Tanggal, Total, IDCustomer) " +
-                    "VALUES ('2025-06-12', 150000, 2)");
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES ('Pembelian Kopi Arabica', '2025-06-02', 1, 60000, 50)");
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES ('Pembelian Kopi Robusta', '2025-06-02', 1, 65000, 50)");
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES ('Pembelian Kopi Pacamara', '2025-06-02', 1, 70000, 50)");
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES ('Pembelian Kopi Liberica', '2025-06-02', 1, 50000, 50)");
+            stmt.executeUpdate("INSERT INTO Invoice (JudulInvoice, Tanggal, IDGudang, UnitPrice, Kuantitas) " +
+                    "VALUES ('Pembelian Kopi Excelsa', '2025-06-02', 1, 40000, 50)");
 
             stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     // ---------------- PENJUALAN ----------------
     public static void resetTablePenjualan() {
