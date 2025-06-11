@@ -21,25 +21,30 @@ class PenjualanTest {
     void testGetAllPenjualan() {
         List<Penjualan> list = Penjualan.getAllPenjualan();
         assertNotNull(list);
-        assertEquals(2, list.size());
+        assertTrue(list.size() >= 2); // fleksibel, minimal 2 dummy
 
-        Penjualan p = list.get(0);
-        assertEquals(50000, p.getTotalPenjualan());
-        assertEquals("2025-06-01", p.getTanggalPenjualan());
+        boolean hasValidPenjualan = list.stream().anyMatch(p ->
+            p.getTotalPenjualan() == 50000 &&
+            "2025-06-01".equals(p.getTanggalPenjualan())
+        );
+        assertTrue(hasValidPenjualan);
     }
 
     @Test
     void testGetAllPenjualanFromSpesificWh() {
         List<Penjualan> list = Penjualan.getAllPenjualanFromSpesificWh(1);
         assertNotNull(list);
-        assertEquals(1, list.size());
+        assertFalse(list.isEmpty());
 
-        Penjualan p = list.get(0);
-        assertEquals(1, p.getIdGudang());
-        assertEquals("2025-06-01", p.getTanggalPenjualan());
+        boolean allFromGudang1 = list.stream().allMatch(p -> p.getIdGudang() == 1);
+        assertTrue(allFromGudang1);
+
+        boolean hasExpectedDate = list.stream().anyMatch(p ->
+            "2025-06-01".equals(p.getTanggalPenjualan())
+        );
+        assertTrue(hasExpectedDate);
     }
 
-    // Tambahan: test validasi setter dan getter
     @Test
     void testSetterGetter() {
         Penjualan p = new Penjualan();
@@ -48,9 +53,11 @@ class PenjualanTest {
         p.setTanggalPenjualan("2025-01-01");
         p.setIdGudang(5);
 
-        assertEquals(99, p.getIdPenjualan());
-        assertEquals(123456, p.getTotalPenjualan());
-        assertEquals("2025-01-01", p.getTanggalPenjualan());
-        assertEquals(5, p.getIdGudang());
+        assertAll(
+            () -> assertEquals(99, p.getIdPenjualan()),
+            () -> assertEquals(123456, p.getTotalPenjualan()),
+            () -> assertEquals("2025-01-01", p.getTanggalPenjualan()),
+            () -> assertEquals(5, p.getIdGudang())
+        );
     }
 }

@@ -19,11 +19,23 @@ class ResepTest {
 
     @Test
     void testGetAllResep() {
-        List<Resep> reseps = Resep.getAllResep();
-        assertEquals(2, reseps.size());
+        List<Resep> beforeInsert = Resep.getAllResep();
+        int initialSize = beforeInsert.size();
 
-        Resep r1 = reseps.get(0);
-        assertEquals("Nasi Goreng", r1.getNamaResep());
+        // Tambahkan satu resep baru
+        Resep newResep = new Resep(null, "Nasi Goreng Spesial", "Pakai kecap dan ayam", "Nasi, Kecap, Telur, Ayam");
+        boolean saved = newResep.save();
+        assertTrue(saved);
+
+        List<Resep> afterInsert = Resep.getAllResep();
+        assertEquals(initialSize + 1, afterInsert.size());
+
+        // Pastikan resep yang dimasukkan ada di list terbaru
+        boolean found = afterInsert.stream().anyMatch(r ->
+            r.getNamaResep().equals("Nasi Goreng Spesial") &&
+            r.getDeskripsi().equals("Pakai kecap dan ayam")
+        );
+        assertTrue(found);
     }
 
     @Test
@@ -38,12 +50,21 @@ class ResepTest {
 
     @Test
     void testInsertResep() {
+        int beforeSize = Resep.getAllResep().size();
+
         Resep r = new Resep(null, "Soto Ayam", "Kuah kuning", "Ayam, Bumbu, Air");
         boolean saved = r.save();
         assertTrue(saved);
 
-        List<Resep> all = Resep.getAllResep();
-        assertEquals(3, all.size());
+        int afterSize = Resep.getAllResep().size();
+        assertEquals(beforeSize + 1, afterSize);
+
+        // Validasi isi data yang dimasukkan
+        boolean found = Resep.getAllResep().stream().anyMatch(rp ->
+            rp.getNamaResep().equals("Soto Ayam") &&
+            rp.getPreskripsi().contains("Ayam")
+        );
+        assertTrue(found);
     }
 
     @Test

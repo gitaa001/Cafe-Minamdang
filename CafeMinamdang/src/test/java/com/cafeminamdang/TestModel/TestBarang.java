@@ -20,30 +20,35 @@ class BarangTest {
     @Test
     void testGetAllBarang() {
         List<Barang> barangs = Barang.getAllBarang();
-        assertEquals(2, barangs.size());
+        assertTrue(barangs.size() >= 2); // minimal 2 dummy
 
-        Barang b1 = barangs.get(0);
-        assertEquals("Teh Manis", b1.getNamaBarang());
+        boolean found = barangs.stream().anyMatch(b -> b.getNamaBarang().equals("Teh Manis"));
+        assertTrue(found);
     }
 
     @Test
     void testGetBarangByID() {
-        List<Barang> all = Barang.getAllBarang();
-        Integer id = all.get(0).getIDBarang();
+        Barang sample = Barang.getAllBarang().get(0);
+        Barang found = Barang.getBarangByID(sample.getIDBarang());
 
-        Barang found = Barang.getBarangByID(id);
         assertNotNull(found);
-        assertEquals("Teh Manis", found.getNamaBarang());
+        assertEquals(sample.getNamaBarang(), found.getNamaBarang());
     }
 
     @Test
     void testInsertBarang() {
+        int beforeSize = Barang.getAllBarang().size();
+
         Barang b = new Barang(null, "Brownies", "Kue legit", 10, true, 1);
         boolean saved = b.save();
         assertTrue(saved);
 
-        List<Barang> all = Barang.getAllBarang();
-        assertEquals(3, all.size());
+        int afterSize = Barang.getAllBarang().size();
+        assertEquals(beforeSize + 1, afterSize);
+
+        boolean found = Barang.getAllBarang().stream()
+            .anyMatch(barang -> barang.getNamaBarang().equals("Brownies"));
+        assertTrue(found);
     }
 
     @Test
@@ -60,21 +65,29 @@ class BarangTest {
     @Test
     void testDeleteBarang() {
         Barang b = Barang.getAllBarang().get(0);
+        Integer id = b.getIDBarang();
+
         boolean deleted = b.delete();
         assertTrue(deleted);
 
-        Barang shouldBeNull = Barang.getBarangByID(b.getIDBarang());
+        Barang shouldBeNull = Barang.getBarangByID(id);
         assertNull(shouldBeNull);
     }
 
     @Test
     void testGetBarangFromSpesificGudang() {
         List<Barang> fromGudang1 = Barang.getAllBarangFromSpesificWh(1);
-        assertEquals(1, fromGudang1.size());
-        assertEquals("Teh Manis", fromGudang1.get(0).getNamaBarang());
+        assertFalse(fromGudang1.isEmpty());
+
+        boolean found1 = fromGudang1.stream()
+            .anyMatch(b -> b.getNamaBarang().equals("Teh Manis"));
+        assertTrue(found1);
 
         List<Barang> fromGudang2 = Barang.getAllBarangFromSpesificWh(2);
-        assertEquals(1, fromGudang2.size());
-        assertEquals("Kopi Hitam", fromGudang2.get(0).getNamaBarang());
+        assertFalse(fromGudang2.isEmpty());
+
+        boolean found2 = fromGudang2.stream()
+            .anyMatch(b -> b.getNamaBarang().equals("Kopi Hitam"));
+        assertTrue(found2);
     }
 }

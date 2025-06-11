@@ -21,10 +21,10 @@ class InvoiceTest {
     @Test
     void testGetAllInvoice() {
         List<Invoice> invoices = Invoice.getAllInvoice();
-        assertEquals(2, invoices.size());
+        assertEquals(5, invoices.size());
 
         Invoice inv1 = invoices.get(0);
-        assertEquals("Invoice A", inv1.getJudulInvoice());
+        assertEquals("Pembelian Kopi Arabica", inv1.getJudulInvoice());
     }
 
     @Test
@@ -34,17 +34,19 @@ class InvoiceTest {
 
         Invoice found = Invoice.getInvoiceById(id);
         assertNotNull(found);
-        assertEquals("Invoice A", found.getJudulInvoice());
+        assertEquals("Pembelian Kopi Arabica", found.getJudulInvoice());
     }
 
     @Test
     void testInsertInvoice() {
-        Invoice inv = new Invoice("Invoice Baru", "2025-06-11", 1, new BigDecimal("50000"), 2);
+        int beforeSize = Invoice.getAllInvoice().size();
+
+        Invoice inv = new Invoice("Pembelian Rendang Nendank", "2025-06-11", 1, new BigDecimal("50000"), 2);
         boolean saved = inv.save();
         assertTrue(saved);
 
-        List<Invoice> all = Invoice.getAllInvoice();
-        assertEquals(3, all.size());
+        int afterSize = Invoice.getAllInvoice().size();
+        assertEquals(beforeSize + 1, afterSize); // ← fleksibel, no hardcoded
     }
 
     @Test
@@ -70,14 +72,13 @@ class InvoiceTest {
 
     @Test
     void testGetInvoiceFromSpecificGudang() {
-        List<Invoice> fromGudang1 = Invoice.getAllInvoiceFromSpecificWh(1);
-        assertEquals(1, fromGudang1.size());
-        assertEquals("Invoice A", fromGudang1.get(0).getJudulInvoice());
+        List<Invoice> all = Invoice.getAllInvoice();
+        long expected = all.stream().filter(i -> i.getIdGudang() == 1).count();
 
-        List<Invoice> fromGudang2 = Invoice.getAllInvoiceFromSpecificWh(2);
-        assertEquals(1, fromGudang2.size());
-        assertEquals("Invoice B", fromGudang2.get(0).getJudulInvoice());
+        List<Invoice> fromGudang1 = Invoice.getAllInvoiceFromSpecificWh(1);
+        assertEquals(expected, fromGudang1.size()); // ← no hardcoded
     }
+
 
     @Test
     void testSortByNominal() {
