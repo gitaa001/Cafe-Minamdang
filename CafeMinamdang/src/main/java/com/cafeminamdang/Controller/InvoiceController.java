@@ -38,6 +38,15 @@ public class InvoiceController {
      * @return True if the invoice was successfully saved, false otherwise.
      */
     public boolean saveInvoice(Invoice invoice) {
+        if (invoice == null) return false;
+
+        String judul = invoice.getJudulInvoice();
+        if (judul == null || judul.trim().isEmpty()) return false;
+
+        String[] words = judul.trim().split("\\s+");
+        if (words.length > 50) return false;
+
+        if (!judul.matches("^[a-zA-Z\\s]+$")) return false;
         return invoice.save();
     }
 
@@ -80,9 +89,19 @@ public class InvoiceController {
      * @return The updated Invoice object.
      */
     public Invoice updateInvoice(Invoice invoice, String judulInvoice, String tanggal, int idGudang, BigDecimal unitPrice, int kuantitas) {
+        if (invoice == null) return null;
+
         if (!checkValidDate(tanggal)){
             return null;
         }
+
+        if (judulInvoice == null || judulInvoice.trim().isEmpty()) return null;
+
+        String[] words = judulInvoice.trim().split("\\s+");
+        if (words.length > 20) return null;
+
+        if (!judulInvoice.matches("^[a-zA-Z\\s]+$")) return null;
+
         invoice.setJudulInvoice(judulInvoice);
         invoice.setTanggal(tanggal);
         invoice.setIdGudang(idGudang);

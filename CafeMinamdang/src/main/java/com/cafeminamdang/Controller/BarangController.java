@@ -24,13 +24,17 @@ public class BarangController {
      * @return true if inventory item is saved, false otherwise
      */
     public boolean saveBarang(Barang barang){
-        if (barang == null){
-            return false;
-        }
+        if (barang == null) return false;
 
-        if (barang.getNamaBarang() == null || barang.getNamaBarang().trim().isEmpty()){
-            return false;
-        }
+        String nama = barang.getNamaBarang();
+        if (nama == null || nama.trim().isEmpty()) return false;
+
+        //max 20 words
+        String[] words = nama.trim().split("\\s+");
+        if (words.length > 20) return false;
+
+        //edge handling
+        if (!nama.matches("^[a-zA-Z\\s]+$")) return false;
 
         return barang.save();
     }
@@ -85,6 +89,13 @@ public class BarangController {
      * @return newly updated Resep object
      */
     public Barang updateBarang(String namaBarang, String deskripsi, Integer kuantitas, Boolean isKonsinyasi, Integer idGudang, Barang barang){
+        if (namaBarang == null || namaBarang.trim().isEmpty()) return null;
+
+        String[] words = namaBarang.trim().split("\\s+");
+        if (words.length > 50) return null;
+
+        if (!namaBarang.matches("^[a-zA-Z\\s]+$")) return null;
+
         barang.setNamaBarang(namaBarang);
         barang.setDeskripsi(deskripsi);
         barang.setKuantitas(kuantitas);
