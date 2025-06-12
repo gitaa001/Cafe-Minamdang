@@ -35,6 +35,7 @@ public class BarangController {
 
         //edge handling
         if (!nama.matches("^[a-zA-Z\\s]+$")) return false;
+        barang.setNamaBarang(nama.trim());
 
         return barang.save();
     }

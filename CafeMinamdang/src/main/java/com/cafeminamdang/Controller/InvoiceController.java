@@ -47,6 +47,7 @@ public class InvoiceController {
         if (words.length > 50) return false;
 
         if (!judul.matches("^[a-zA-Z\\s]+$")) return false;
+        invoice.setJudulInvoice(judul.trim());
         return invoice.save();
     }
 
@@ -102,7 +103,7 @@ public class InvoiceController {
 
         if (!judulInvoice.matches("^[a-zA-Z\\s]+$")) return null;
 
-        invoice.setJudulInvoice(judulInvoice);
+        invoice.setJudulInvoice(judulInvoice.trim());
         invoice.setTanggal(tanggal);
         invoice.setIdGudang(idGudang);
         invoice.setUnitPrice(unitPrice);
