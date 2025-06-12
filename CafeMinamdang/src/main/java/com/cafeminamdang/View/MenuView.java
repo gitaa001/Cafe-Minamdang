@@ -80,7 +80,7 @@ public class MenuView implements BaseView {
         card.setPadding(new Insets(40, 40, 40, 40));
         card.setStyle("-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 30;");
 
-        Label welcome = new Label("Selamat Datang Di Cafe Minamandang");
+        Label welcome = new Label("Selamat Datang Di Cafe Minamdang");
         welcome.setFont(loadFont("Title"));
         welcome.setTextFill(Color.web("#000000"));
 
